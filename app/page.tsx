@@ -7,9 +7,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
       {/* HERO */}
-<section className="flex flex-col items-center text-center py-16 px-6 gap-4">
+      <section className="flex flex-col items-center text-center py-16 px-6 gap-4">
         <Image
-          src="/foto.jpg" // luego te digo dónde guardarla
+          src="/foto.jpg"
           alt="Foto de Jonathan"
           width={150}
           height={150}
@@ -34,13 +34,6 @@ export default function Home() {
           Full Stack Developer | NestJS | PostgreSQL | Angular | Ionic | React |
           NextJS | Docker | Linux | Oracle | MongoDB
         </motion.p>
-        {/* <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="mt-10 px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg"
-        >
-          Descargar CV
-        </motion.button> */}
       </section>
 
       {/* SOBRE MI */}
@@ -64,10 +57,10 @@ export default function Home() {
         >
           Técnico Informático con experiencia en arquitectura de software,
           desarrollo backend con NestJS, Express y modelado de bases de datos en
-          PostgreSQL. Lenguajes de programacion: TypeScript, JavaScript, Python
-          y SQL. Conocimientos en desarrollo frontend con Angular, Ionic, React
-          y NextJS. Manejo de herramientas como Docker, Git y entornos Linux.
-          Apasionado por crear sistemas robustos, escalables y seguros.
+          PostgreSQL. Lenguajes de programación: TypeScript, JavaScript, Python y SQL.
+          Conocimientos en desarrollo frontend con Angular, Ionic, React y NextJS.
+          Manejo de herramientas como Docker, Git y Linux. Apasionado por crear
+          sistemas robustos, escalables y seguros.
         </motion.p>
       </section>
 
@@ -76,7 +69,6 @@ export default function Home() {
         <h2 className="text-4xl font-bold text-center mb-12">Proyectos</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-          {/* Card 1 */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-all"
@@ -88,7 +80,6 @@ export default function Home() {
               Control de acceso, QR dinámico, guardias, visitas y auditoría.
             </p>
 
-            {/* Botón */}
             <motion.a
               href="/proyecto_condominio"
               whileHover={{ scale: 1.1 }}
@@ -129,69 +120,46 @@ export default function Home() {
           ))}
         </div>
       </section>
+
       {/* CONTACTO */}
-<section className="px-8 py-20 max-w-3xl mx-auto">
-  <h2 className="text-4xl font-bold text-center mb-10">Contacto</h2>
+      <section className="px-8 py-20 max-w-3xl mx-auto">
+        <h2 className="text-4xl font-bold text-center mb-10">Contacto</h2>
 
-  <form
-    className="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4"
-    onSubmit={async (e) => {
-      e.preventDefault();
+        <form
+          className="bg-white p-6 rounded-lg shadow-md flex flex-col gap-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
 
-      const form = e.target as HTMLFormElement;
-      const data = {
-        nombre: form.nombre.value,
-        email: form.email.value,
-        mensaje: form.mensaje.value,
-      };
+            const form = e.target as HTMLFormElement;
+            const data = {
+              nombre: form.nombre.value,
+              email: form.email.value,
+              mensaje: form.mensaje.value,
+            };
 
-      const res = await fetch("/api/contacto", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+            const res = await fetch("/api/contacto", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(data),
+            });
 
-      if (res.ok) {
-        alert("Mensaje enviado correctamente 😎📬");
-        form.reset();
-      } else {
-        alert("Hubo un error al enviar el mensaje.");
-      }
-    }}
-  >
-    <input
-      name="nombre"
-      type="text"
-      placeholder="Tu nombre"
-      required
-      className="border p-3 rounded"
-    />
+            if (res.ok) {
+              alert("Mensaje enviado correctamente 😎📬");
+              form.reset();
+            } else {
+              alert("Hubo un error al enviar el mensaje.");
+            }
+          }}
+        >
+          <input name="nombre" type="text" placeholder="Tu nombre" required className="border p-3 rounded" />
+          <input name="email" type="email" placeholder="Tu correo" required className="border p-3 rounded" />
+          <textarea name="mensaje" placeholder="Escribe tu mensaje..." rows={5} required className="border p-3 rounded"></textarea>
 
-    <input
-      name="email"
-      type="email"
-      placeholder="Tu correo"
-      required
-      className="border p-3 rounded"
-    />
-
-    <textarea
-      name="mensaje"
-      placeholder="Escribe tu mensaje..."
-      rows={5}
-      required
-      className="border p-3 rounded"
-    ></textarea>
-
-    <button
-      type="submit"
-      className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:scale-105 transition-all"
-    >
-      Enviar mensaje
-    </button>
-  </form>
-</section>
-
+          <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:scale-105 transition-all">
+            Enviar mensaje
+          </button>
+        </form>
+      </section>
 
       {/* FOOTER */}
       <footer className="text-center py-8 text-gray-600">
