@@ -12,7 +12,10 @@ export default function ProyectoCondominio() {
           GestCond
         </motion.h1>
 
-        <Link href="/" className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold shadow hover:scale-105 transition-all">
+        <Link
+          href="/"
+          className="px-4 py-2 bg-blue-600 text-white rounded-full font-semibold shadow hover:scale-105 transition-all"
+        >
           ← Volver al Inicio
         </Link>
       </nav>
