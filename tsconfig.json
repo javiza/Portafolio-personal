@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-      "typeRoots": ["./types", "./node_modules/@types"],
-   
+    "typeRoots": ["./types", "./node_modules/@types"],
+
     "strictNullChecks": true,
 
     "target": "ES2017",
@@ -32,7 +32,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts", "types"
   ],
   "exclude": ["node_modules"]
 }
