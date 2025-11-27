@@ -92,29 +92,49 @@ export default function Home() {
       </section>
 
       {/* ------------------------ GITHUB STATS ------------------------ */}
-      <section className="py-10 flex flex-col items-center text-center">
-  <h2 className="text-4xl font-bold mb-6">Estadísticas de GitHub</h2>
+     {/* ------------------------ GITHUB STATS ------------------------ */}
+<section className="py-16 flex flex-col items-center text-center">
+  <h2 className="text-4xl font-bold mb-10">Estadísticas de GitHub</h2>
 
-  <div className="flex flex-col items-center gap-6">
+  <div className="flex flex-col items-center gap-10">
 
-    <Image
-      src="https://github-readme-stats-git-master-jstrieb.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
-      alt="GitHub Stats"
-      width={500}
-      height={200}
-      className="rounded-lg shadow-lg"
-    />
+    {/* Tarjeta 1 - GitHub Stats */}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="shadow-xl rounded-xl overflow-hidden bg-white border border-gray-200"
+    >
+      <Image
+        src="https://github-readme-stats.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
+        alt="GitHub Stats"
+        width={480}
+        height={240}
+        className="rounded-xl"
+      />
+    </motion.div>
 
-    <Image
-      src="https://github-readme-streak-stats.herokuapp.com/?user=javiza&theme=blueberry"
-      alt="GitHub Streak"
-      width={500}
-      height={200}
-      className="rounded-lg shadow-lg"
-    />
+    {/* Tarjeta 2 - GitHub Streak */}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.8 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="shadow-xl rounded-xl overflow-hidden bg-white border border-gray-200"
+    >
+      <Image
+        src="https://streak-stats.demolab.com/?user=javiza&theme=blueberry"
+        alt="GitHub Streak"
+        width={480}
+        height={240}
+        className="rounded-xl"
+      />
+    </motion.div>
 
   </div>
 </section>
+
 
 
       {/* ------------------------ HABILIDADES (tarjetas con iconos) ------------------------ */}

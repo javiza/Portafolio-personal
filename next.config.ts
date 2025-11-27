@@ -1,11 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "github-readme-stats.vercel.app",
-      "github-readme-streak-stats.herokuapp.com",
-      "github-readme-stats-git-master-jstrieb.vercel.app",
-      "raw.githubusercontent.com"
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "github-readme-stats.vercel.app",
+      },
+      {
+        protocol: "https",
+        hostname: "streak-stats.demolab.com",
+      },
     ],
   },
 };
