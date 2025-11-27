@@ -106,13 +106,10 @@ export default function Home() {
       transition={{ duration: 0.8 }}
       className="shadow-xl rounded-xl overflow-hidden bg-white border border-gray-200"
     >
-      <Image
-        src="https://github-readme-stats.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
-        alt="GitHub Stats"
-        width={480}
-        height={240}
-        className="rounded-xl"
-      />
+      <img
+  src="https://github-readme-stats.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
+  className="rounded-lg shadow-lg"
+/>
     </motion.div>
 
     {/* Tarjeta 2 - GitHub Streak */}
@@ -123,13 +120,11 @@ export default function Home() {
       transition={{ duration: 0.8 }}
       className="shadow-xl rounded-xl overflow-hidden bg-white border border-gray-200"
     >
-      <Image
-        src="https://streak-stats.demolab.com/?user=javiza&theme=blueberry"
-        alt="GitHub Streak"
-        width={480}
-        height={240}
-        className="rounded-xl"
-      />
+    
+<img
+  src="https://streak-stats.demolab.com?user=javiza&theme=blueberry"
+  className="rounded-lg shadow-lg"
+/>
     </motion.div>
 
   </div>
