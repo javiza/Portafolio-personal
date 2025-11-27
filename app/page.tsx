@@ -20,7 +20,6 @@ import {
 export default function Home() {
   return (
     <main className="min-h-screen bg-gray-100 text-gray-800">
-
       {/* ------------------------ HERO REDISEÑADO ------------------------ */}
       <section className="flex flex-col items-center text-center pt-20 px-6 gap-4">
         <motion.div
@@ -53,8 +52,9 @@ export default function Home() {
           transition={{ delay: 0.4, duration: 0.8 }}
           className="text-xl mt-2 text-gray-700 max-w-2xl"
         >
-          Full Stack Developer especializado en NestJS, PostgreSQL, Angular, Ionic, React, Next.js,
-          Docker, Linux y arquitectura de software robusta y escalable.
+          Full Stack Developer especializado en NestJS, PostgreSQL, Angular,
+          Ionic, React, Next.js, Docker, Linux y arquitectura de software
+          robusta y escalable.
         </motion.p>
       </section>
 
@@ -97,7 +97,7 @@ export default function Home() {
 
         <div className="flex flex-col items-center gap-6">
           <img
-            src="https://github-readme-stats.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
+            src="https://github-readme-stats-git-master-jstrieb.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
             className="rounded-lg shadow-lg"
           />
 
@@ -110,10 +110,11 @@ export default function Home() {
 
       {/* ------------------------ HABILIDADES (tarjetas con iconos) ------------------------ */}
       <section className="px-8 py-20 max-w-5xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12">Habilidades Técnicas</h2>
+        <h2 className="text-4xl font-bold text-center mb-12">
+          Habilidades Técnicas
+        </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-
           {[
             { icon: <SiNextdotjs />, name: "NextJS" },
             { icon: <SiReact />, name: "React" },
@@ -133,9 +134,7 @@ export default function Home() {
               whileHover={{ scale: 1.1 }}
               className="flex flex-col items-center bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition cursor-pointer border border-gray-200"
             >
-              <div className="text-4xl text-blue-600 mb-2">
-                {skill.icon}
-              </div>
+              <div className="text-4xl text-blue-600 mb-2">{skill.icon}</div>
               <p className="text-lg font-semibold">{skill.name}</p>
             </motion.div>
           ))}
@@ -144,10 +143,11 @@ export default function Home() {
 
       {/* ------------------------ PROYECTOS MEJORADOS ------------------------ */}
       <section className="px-8 py-20 bg-white">
-        <h2 className="text-4xl font-bold text-center mb-12">Proyectos Destacados</h2>
+        <h2 className="text-4xl font-bold text-center mb-12">
+          Proyectos Destacados
+        </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
           {/* PROYECTO 1 */}
           <motion.div
             whileHover={{ scale: 1.05 }}
@@ -157,7 +157,8 @@ export default function Home() {
               Sistema de Condominio
             </h3>
             <p className="mt-3 text-gray-700">
-              Control de accesos, QR dinámico, auditoría, guardias y dashboard en vivo.
+              Control de accesos, QR dinámico, auditoría, guardias y dashboard
+              en vivo.
             </p>
 
             <motion.a
@@ -178,7 +179,8 @@ export default function Home() {
               API Rest NestJS
             </h3>
             <p className="mt-3 text-gray-700">
-              Autenticación JWT, CRUD profesional, validaciones, excepciones y auditoría.
+              Autenticación JWT, CRUD profesional, validaciones, excepciones y
+              auditoría.
             </p>
           </motion.div>
 
@@ -191,10 +193,10 @@ export default function Home() {
               Dashboard en tiempo real
             </h3>
             <p className="mt-3 text-gray-700">
-              WebSockets, métricas de tráfico, monitoreo en vivo estilo admin panel.
+              WebSockets, métricas de tráfico, monitoreo en vivo estilo admin
+              panel.
             </p>
           </motion.div>
-
         </div>
       </section>
 
@@ -224,11 +226,32 @@ export default function Home() {
             form.reset();
           }}
         >
-          <input name="nombre" type="text" placeholder="Tu nombre" required className="border p-3 rounded" />
-          <input name="email" type="email" placeholder="Tu correo" required className="border p-3 rounded" />
-          <textarea name="mensaje" placeholder="Mensaje..." rows={5} required className="border p-3 rounded"></textarea>
+          <input
+            name="nombre"
+            type="text"
+            placeholder="Tu nombre"
+            required
+            className="border p-3 rounded"
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Tu correo"
+            required
+            className="border p-3 rounded"
+          />
+          <textarea
+            name="mensaje"
+            placeholder="Mensaje..."
+            rows={5}
+            required
+            className="border p-3 rounded"
+          ></textarea>
 
-          <button type="submit" className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:scale-105 transition-all">
+          <button
+            type="submit"
+            className="px-6 py-3 bg-blue-600 text-white rounded-full font-semibold hover:scale-105 transition-all"
+          >
             Enviar mensaje
           </button>
         </form>
@@ -238,7 +261,6 @@ export default function Home() {
       <footer className="text-center py-8 text-gray-600">
         <p>© {new Date().getFullYear()} Jonathan Bustos – Portafolio</p>
       </footer>
-
     </main>
   );
 }
