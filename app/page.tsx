@@ -93,20 +93,29 @@ export default function Home() {
 
       {/* ------------------------ GITHUB STATS ------------------------ */}
       <section className="py-10 flex flex-col items-center text-center">
-        <h2 className="text-4xl font-bold mb-6">Estadísticas de GitHub</h2>
+  <h2 className="text-4xl font-bold mb-6">Estadísticas de GitHub</h2>
 
-        <div className="flex flex-col items-center gap-6">
-          <img
-            src="https://github-readme-stats-git-master-jstrieb.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
-            className="rounded-lg shadow-lg"
-          />
+  <div className="flex flex-col items-center gap-6">
 
-          <img
-            src="https://github-readme-streak-stats.herokuapp.com/?user=javiza&theme=blueberry"
-            className="rounded-lg shadow-lg"
-          />
-        </div>
-      </section>
+    <Image
+      src="https://github-readme-stats-git-master-jstrieb.vercel.app/api?username=javiza&show_icons=true&theme=blueberry"
+      alt="GitHub Stats"
+      width={500}
+      height={200}
+      className="rounded-lg shadow-lg"
+    />
+
+    <Image
+      src="https://github-readme-streak-stats.herokuapp.com/?user=javiza&theme=blueberry"
+      alt="GitHub Streak"
+      width={500}
+      height={200}
+      className="rounded-lg shadow-lg"
+    />
+
+  </div>
+</section>
+
 
       {/* ------------------------ HABILIDADES (tarjetas con iconos) ------------------------ */}
       <section className="px-8 py-20 max-w-5xl mx-auto">
