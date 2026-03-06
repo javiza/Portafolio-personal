@@ -17,7 +17,7 @@ import {
   SiIonic,
   SiMongodb,
   SiExpress,
-   SiPostman,
+  SiPostman,
   SiSwagger,
   SiOwasp
 } from "react-icons/si";
@@ -46,7 +46,7 @@ export default function Home() {
         {theme === "light" ? "🌙" : "✨"}
       </button>
 
-      {/* ------------------------ HERO ------------------------ */}
+      {/* HERO */}
       <section className="flex flex-col items-center text-center pt-24 px-6 gap-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.65 }}
@@ -73,17 +73,17 @@ export default function Home() {
 
         <p className="text-lg max-w-2xl text-gray-700 dark:text-gray-300">
           Full Stack Developer especializado en NestJS, PostgreSQL, Angular,
-          Ionic, React, Next.js, Docker, Linux y arquitectura de software
-          robusta y escalable.
-          Tambien me encuentro especializandome en Ciberseguridad, Pentesting WEB/APi
+          Ionic, React, Next.js, Docker y Linux.  
+          Actualmente especializándome en **Ciberseguridad y Pentesting Web / API**.
         </p>
       </section>
 
-      {/* ------------------------ REDES ------------------------ */}
+      {/* REDES */}
       <section className="mt-16 flex flex-col items-center gap-6 px-6">
         <h2 className="title-section text-3xl">Redes Profesionales</h2>
 
         <div className="flex flex-wrap justify-center gap-6">
+
           <motion.a
             href="https://github.com/javiza"
             target="_blank"
@@ -102,17 +102,15 @@ export default function Home() {
             className="flex items-center gap-3 px-6 py-3 
             bg-blue-600 text-white rounded-full shadow-lg"
           >
-            <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24">
-              <path d="M4.98 3.5c0 1.38-1.1 2.5-2.48 2.5S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4v15h-4V8zm7.5 0h3.8v2.2h.1c.5-1 1.7-2.2 3.5-2.2 3.7 0 4.4 2.4 4.4 5.6V23h-4v-7.7c0-1.8 0-4-2.4-4-2.4 0-2.8 1.9-2.8 3.9V23h-4V8z" />
-            </svg>
             LinkedIn
           </motion.a>
+
         </div>
       </section>
 
-      {/* ------------------------ HABILIDADES ------------------------ */}
+      {/* HABILIDADES FULLSTACK */}
       <section className="px-8 py-20 max-w-6xl mx-auto">
-        <h2 className="title-section mb-12">Habilidades Técnicas</h2>
+        <h2 className="title-section mb-12">Stack de Desarrollo</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
           {[
@@ -127,17 +125,7 @@ export default function Home() {
             { icon: <SiGit />, name: "Git" },
             { icon: <SiTypescript />, name: "TypeScript" },
             { icon: <SiExpress />, name: "Express" },
-            { icon: <SiMongodb />, name: "MongoDB" },
-             // --- CIBERSEGURIDAD ---
-            { icon: <SiOwasp />, name: "OWASP Top 10" },
-            { icon: <FaBug />, name: "SQL Injection" },
-            { icon: <FaBug />, name: "Cross-Site Scripting (XSS)" },
-            { icon: <MdSecurity />, name: "Broken Access Control" },
-            { icon: <MdSecurity />, name: "API Security Testing" },
-            { icon: <MdSecurity />, name: "JWT Authentication Security" },
-            { icon: <SiPostman />, name: "Postman Testing" },
-            { icon: <SiSwagger />, name: "Swagger / OpenAPI" },
-            { icon: <MdSecurity />, name: "Unit Testing Security" },
+            { icon: <SiMongodb />, name: "MongoDB" }
           ].map((skill, i) => (
             <motion.div
               key={i}
@@ -147,6 +135,7 @@ export default function Home() {
               <div className="text-4xl text-blue-600 dark:text-purple-300">
                 {skill.icon}
               </div>
+
               <p className="font-semibold text-gray-800 dark:text-purple-200">
                 {skill.name}
               </p>
@@ -155,51 +144,124 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ------------------------ PROYECTOS ------------------------ */}
+      {/* HABILIDADES CIBERSEGURIDAD */}
+      <section className="px-8 pb-20 max-w-6xl mx-auto">
+        <h2 className="title-section mb-12">Ciberseguridad</h2>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+          {[
+            { icon: <SiOwasp />, name: "OWASP Top 10" },
+            { icon: <FaBug />, name: "SQL Injection" },
+            { icon: <FaBug />, name: "Cross Site Scripting" },
+            { icon: <MdSecurity />, name: "Broken Access Control" },
+            { icon: <MdSecurity />, name: "API Security Testing" },
+            { icon: <MdSecurity />, name: "JWT Security" },
+            { icon: <SiPostman />, name: "Postman" },
+            { icon: <SiSwagger />, name: "Swagger / OpenAPI" }
+          ].map((skill, i) => (
+            <motion.div
+              key={i}
+              whileHover={{ scale: 1.05 }}
+              className="card flex flex-col items-center gap-2"
+            >
+              <div className="text-4xl text-red-500">
+                {skill.icon}
+              </div>
+
+              <p className="font-semibold text-gray-800 dark:text-purple-200">
+                {skill.name}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* PROYECTOS */}
       <section className="px-8 py-20">
         <h2 className="title-section mb-12">Proyectos Destacados</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-         <motion.div whileHover={{ scale: 1.04 }} className="card flex flex-col">
-  <h3 className="text-2xl font-semibold text-blue-600 dark:text-purple-300">
-    Sistema de Condominio
-  </h3>
-
-  <p className="mt-3 text-gray-700 dark:text-gray-300">
-    Control de accesos, QR dinámico y auditoría en vivo.
-  </p>
-
-  <a
-    href="/proyecto_condominio"
-    className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full 
-               shadow-md hover:scale-105 transition-all text-center"
-  >
-    Ver Detalles →
-  </a>
-</motion.div>
-
 
           <motion.div whileHover={{ scale: 1.04 }} className="card">
-            <h3 className="text-2xl font-semibold text-green-700 dark:text-green-300">
-              API Rest NestJS
+            <h3 className="text-2xl font-semibold text-blue-600 dark:text-purple-300">
+              Sistema de Condominio
             </h3>
+
             <p className="mt-3 text-gray-700 dark:text-gray-300">
-              CRUD profesional con autenticación JWT y validaciones.
+              Control de accesos con QR dinámico, auditoría en tiempo real y panel administrativo.
+            </p>
+
+            <a
+              href="/proyecto_condominio"
+              className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
+            >
+              Ver Detalles →
+            </a>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.04 }} className="card">
+            <h3 className="text-2xl font-semibold text-green-600">
+              API REST NestJS
+            </h3>
+
+            <p className="mt-3 text-gray-700 dark:text-gray-300">
+              API profesional con autenticación JWT, validaciones y arquitectura modular.
             </p>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.04 }} className="card">
-            <h3 className="text-2xl font-semibold text-purple-700 dark:text-purple-300">
-              Dashboard en tiempo real
+            <h3 className="text-2xl font-semibold text-purple-600">
+              Dashboard Tiempo Real
             </h3>
+
             <p className="mt-3 text-gray-700 dark:text-gray-300">
-              WebSockets, métricas en vivo y monitoreo avanzado.
+              Dashboard con WebSockets y métricas en vivo.
             </p>
           </motion.div>
+
         </div>
       </section>
 
-      {/* ------------------------ CONTACTO ------------------------ */}
+      {/* LABORATORIO DE SEGURIDAD */}
+      <section className="px-8 py-20 max-w-6xl mx-auto">
+        <h2 className="title-section mb-12">Laboratorio de Seguridad</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+
+          <motion.div whileHover={{ scale: 1.04 }} className="card">
+            <h3 className="text-xl font-semibold text-red-500">
+              SQL Injection Lab
+            </h3>
+
+            <p className="mt-3 text-gray-700 dark:text-gray-300">
+              Pruebas de explotación de SQL Injection y mitigación con prepared statements.
+            </p>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.04 }} className="card">
+            <h3 className="text-xl font-semibold text-yellow-500">
+              Cross Site Scripting
+            </h3>
+
+            <p className="mt-3 text-gray-700 dark:text-gray-300">
+              Análisis de XSS almacenado y reflejado en aplicaciones web.
+            </p>
+          </motion.div>
+
+          <motion.div whileHover={{ scale: 1.04 }} className="card">
+            <h3 className="text-xl font-semibold text-purple-500">
+              API Security Testing
+            </h3>
+
+            <p className="mt-3 text-gray-700 dark:text-gray-300">
+              Pruebas de autenticación JWT y vulnerabilidades IDOR.
+            </p>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* CONTACTO */}
       <section className="px-8 py-20 max-w-3xl mx-auto">
         <h2 className="title-section mb-10">Contacto</h2>
 
@@ -212,60 +274,34 @@ export default function Home() {
             const data = {
               nombre: form.nombre.value,
               email: form.email.value,
-              mensaje: form.mensaje.value,
+              mensaje: form.mensaje.value
             };
 
             const res = await fetch("/api/contacto", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data),
+              body: JSON.stringify(data)
             });
 
             alert(res.ok ? "Mensaje enviado!" : "Error al enviar.");
             form.reset();
           }}
         >
-          <input
-            name="nombre"
-            type="text"
-            placeholder="Tu nombre"
-            required
-            className="border p-3 rounded 
-            dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-          />
+          <input name="nombre" placeholder="Tu nombre" required className="border p-3 rounded"/>
+          <input name="email" type="email" placeholder="Tu correo" required className="border p-3 rounded"/>
+          <textarea name="mensaje" rows={5} placeholder="Mensaje..." required className="border p-3 rounded"></textarea>
 
-          <input
-            name="email"
-            type="email"
-            placeholder="Tu correo"
-            required
-            className="border p-3 rounded 
-            dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-          />
-
-          <textarea
-            name="mensaje"
-            placeholder="Mensaje..."
-            rows={5}
-            required
-            className="border p-3 rounded 
-            dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-          ></textarea>
-
-          <button
-            type="submit"
-            className="px-6 py-3 bg-blue-600 text-white rounded-full 
-            font-semibold hover:scale-105 transition-all"
-          >
+          <button className="px-6 py-3 bg-blue-600 text-white rounded-full">
             Enviar mensaje
           </button>
         </form>
       </section>
 
-      {/* ------------------------ FOOTER ------------------------ */}
+      {/* FOOTER */}
       <footer className="text-center py-10 text-gray-600 dark:text-purple-200">
         © {new Date().getFullYear()} Jonathan Bustos – Portafolio
       </footer>
+
     </main>
   );
 }
