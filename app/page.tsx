@@ -17,7 +17,13 @@ import {
   SiIonic,
   SiMongodb,
   SiExpress,
+   SiPostman,
+  SiSwagger,
+  SiOwasp
 } from "react-icons/si";
+
+import { MdSecurity } from "react-icons/md";
+import { FaBug } from "react-icons/fa";
 
 import BackgroundParticles from "./components/BackgroundParticles";
 
@@ -122,6 +128,16 @@ export default function Home() {
             { icon: <SiTypescript />, name: "TypeScript" },
             { icon: <SiExpress />, name: "Express" },
             { icon: <SiMongodb />, name: "MongoDB" },
+             // --- CIBERSEGURIDAD ---
+            { icon: <SiOwasp />, name: "OWASP Top 10" },
+            { icon: <FaBug />, name: "SQL Injection" },
+            { icon: <FaBug />, name: "Cross-Site Scripting (XSS)" },
+            { icon: <MdSecurity />, name: "Broken Access Control" },
+            { icon: <MdSecurity />, name: "API Security Testing" },
+            { icon: <MdSecurity />, name: "JWT Authentication Security" },
+            { icon: <SiPostman />, name: "Postman Testing" },
+            { icon: <SiSwagger />, name: "Swagger / OpenAPI" },
+            { icon: <MdSecurity />, name: "Unit Testing Security" },
           ].map((skill, i) => (
             <motion.div
               key={i}
