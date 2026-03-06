@@ -69,6 +69,7 @@ export default function Home() {
           Full Stack Developer especializado en NestJS, PostgreSQL, Angular,
           Ionic, React, Next.js, Docker, Linux y arquitectura de software
           robusta y escalable.
+          Tambien m encuentro especializandome en ciberseguridad, Pentesting WEB/APi
         </p>
       </section>
 
