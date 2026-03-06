@@ -19,9 +19,9 @@ import {
   SiExpress,
   SiPostman,
   SiSwagger,
-  SiOwasp
+  SiOwasp,
 } from "react-icons/si";
-
+import Link from "next/link";
 import { MdSecurity } from "react-icons/md";
 import { FaBug } from "react-icons/fa";
 
@@ -73,10 +73,51 @@ export default function Home() {
 
         <p className="text-lg max-w-2xl text-gray-700 dark:text-gray-300">
           Full Stack Developer especializado en NestJS, PostgreSQL, Angular,
-          Ionic, React, Next.js, Docker y Linux.  
-          en Cloud: Azure, Oracle, Render.
-          Actualmente especializándome en **Ciberseguridad y Pentesting Web / API**.
+          Ionic, React, Next.js, Docker y Linux. en Cloud: Azure, Oracle,
+          Render. Actualmente especializándome en{" "}
+          <strong>Ciberseguridad y Pentesting Web / API</strong>.
         </p>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="font-mono text-green-500 mt-4"
+        >
+          $ initializing_security_modules...
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5 }}
+          className="font-mono text-green-500"
+        >
+          $ scanning_web_applications...
+        </motion.p>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2 }}
+          className="font-mono text-green-500"
+        >
+          $ pentesting_mode_enabled ✓
+        </motion.p>
+        <div className="flex gap-4 mt-6">
+          <Link
+            href="#proyectos"
+            className="px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg"
+          >
+            Ver Proyectos
+          </Link>
+
+          <Link
+            href="#contacto"
+            className="px-6 py-3 border border-purple-500 rounded-full"
+          >
+            Contactar
+          </Link>
+        </div>
       </section>
 
       {/* REDES */}
@@ -84,7 +125,6 @@ export default function Home() {
         <h2 className="title-section text-3xl">Redes Profesionales</h2>
 
         <div className="flex flex-wrap justify-center gap-6">
-
           <motion.a
             href="https://github.com/javiza"
             target="_blank"
@@ -105,7 +145,6 @@ export default function Home() {
           >
             LinkedIn
           </motion.a>
-
         </div>
       </section>
 
@@ -126,11 +165,11 @@ export default function Home() {
             { icon: <SiGit />, name: "Git" },
             { icon: <SiTypescript />, name: "TypeScript" },
             { icon: <SiExpress />, name: "Express" },
-            { icon: <SiMongodb />, name: "MongoDB" }
+            { icon: <SiMongodb />, name: "MongoDB" },
           ].map((skill, i) => (
             <motion.div
               key={i}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.08, rotate: 1 }}
               className="card flex flex-col items-center gap-2"
             >
               <div className="text-4xl text-blue-600 dark:text-purple-300">
@@ -158,16 +197,14 @@ export default function Home() {
             { icon: <MdSecurity />, name: "API Security Testing" },
             { icon: <MdSecurity />, name: "JWT Security" },
             { icon: <SiPostman />, name: "Postman" },
-            { icon: <SiSwagger />, name: "Swagger / OpenAPI" }
+            { icon: <SiSwagger />, name: "Swagger / OpenAPI" },
           ].map((skill, i) => (
             <motion.div
               key={i}
               whileHover={{ scale: 1.05 }}
               className="card flex flex-col items-center gap-2"
             >
-              <div className="text-4xl text-red-500">
-                {skill.icon}
-              </div>
+              <div className="text-4xl text-red-500">{skill.icon}</div>
 
               <p className="font-semibold text-gray-800 dark:text-purple-200">
                 {skill.name}
@@ -178,26 +215,26 @@ export default function Home() {
       </section>
 
       {/* PROYECTOS */}
-      <section className="px-8 py-20">
+      <section id="proyectos" className="px-8 py-20">
         <h2 className="title-section mb-12">Proyectos Destacados</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-
           <motion.div whileHover={{ scale: 1.04 }} className="card">
             <h3 className="text-2xl font-semibold text-blue-600 dark:text-purple-300">
               Sistema de Condominio
             </h3>
 
             <p className="mt-3 text-gray-700 dark:text-gray-300">
-              Control de accesos con QR dinámico, auditoría en tiempo real y panel administrativo.
+              Control de accesos con QR dinámico, auditoría en tiempo real y
+              panel administrativo.
             </p>
 
-            <a
+            <Link
               href="/proyecto_condominio"
               className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
             >
               Ver Detalles →
-            </a>
+            </Link>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.04 }} className="card">
@@ -206,7 +243,8 @@ export default function Home() {
             </h3>
 
             <p className="mt-3 text-gray-700 dark:text-gray-300">
-              API profesional con autenticación JWT, validaciones y arquitectura modular.
+              API profesional con autenticación JWT, validaciones y arquitectura
+              modular.
             </p>
           </motion.div>
 
@@ -219,23 +257,36 @@ export default function Home() {
               Dashboard con WebSockets y métricas en vivo.
             </p>
           </motion.div>
+        </div>
+      </section>
+      {/* EXPERIENCIA */}
+      <section className="px-8 py-20 max-w-6xl mx-auto">
+        <h2 className="title-section mb-12">Experiencia</h2>
 
+        <div className="card">
+          <h3 className="text-xl font-semibold">FullStack Developer</h3>
+
+          <p className="text-gray-500">
+            Desarrollo de APIs, dashboards y sistemas empresariales utilizando
+            NestJS, PostgreSQL, Angular y Docker.
+          </p>
         </div>
       </section>
 
       {/* LABORATORIO DE SEGURIDAD */}
+
       <section className="px-8 py-20 max-w-6xl mx-auto">
         <h2 className="title-section mb-12">Laboratorio de Seguridad</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-
           <motion.div whileHover={{ scale: 1.04 }} className="card">
             <h3 className="text-xl font-semibold text-red-500">
               SQL Injection Lab
             </h3>
 
             <p className="mt-3 text-gray-700 dark:text-gray-300">
-              Pruebas de explotación de SQL Injection y mitigación con prepared statements.
+              Pruebas de explotación de SQL Injection y mitigación con prepared
+              statements.
             </p>
           </motion.div>
 
@@ -258,14 +309,21 @@ export default function Home() {
               Pruebas de autenticación JWT y vulnerabilidades IDOR.
             </p>
           </motion.div>
+        </div>
 
+        {/* BOTON PLAYGROUND */}
+        <div className="flex justify-center mt-12">
+          <Link
+            href="/labs"
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white rounded-full text-lg shadow-lg"
+          >
+            Explorar Security Playground →
+          </Link>
         </div>
       </section>
 
       {/* CONTACTO */}
-      <section className="px-8 py-20 max-w-3xl mx-auto">
-        <h2 className="title-section mb-10">Contacto</h2>
-
+      <section id="contacto" className="px-8 py-20 max-w-3xl mx-auto">
         <form
           className="card flex flex-col gap-4"
           onSubmit={async (e) => {
@@ -275,22 +333,39 @@ export default function Home() {
             const data = {
               nombre: form.nombre.value,
               email: form.email.value,
-              mensaje: form.mensaje.value
+              mensaje: form.mensaje.value,
             };
 
             const res = await fetch("/api/contacto", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data)
+              body: JSON.stringify(data),
             });
 
             alert(res.ok ? "Mensaje enviado!" : "Error al enviar.");
             form.reset();
           }}
         >
-          <input name="nombre" placeholder="Tu nombre" required className="border p-3 rounded"/>
-          <input name="email" type="email" placeholder="Tu correo" required className="border p-3 rounded"/>
-          <textarea name="mensaje" rows={5} placeholder="Mensaje..." required className="border p-3 rounded"></textarea>
+          <input
+            name="nombre"
+            placeholder="Tu nombre"
+            required
+            className="border p-3 rounded"
+          />
+          <input
+            name="email"
+            type="email"
+            placeholder="Tu correo"
+            required
+            className="border p-3 rounded"
+          />
+          <textarea
+            name="mensaje"
+            rows={5}
+            placeholder="Mensaje..."
+            required
+            className="border p-3 rounded"
+          ></textarea>
 
           <button className="px-6 py-3 bg-blue-600 text-white rounded-full">
             Enviar mensaje
@@ -302,7 +377,6 @@ export default function Home() {
       <footer className="text-center py-10 text-gray-600 dark:text-purple-200">
         © {new Date().getFullYear()} Jonathan Bustos – Portafolio
       </footer>
-
     </main>
   );
 }
