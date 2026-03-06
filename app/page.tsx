@@ -74,6 +74,7 @@ export default function Home() {
         <p className="text-lg max-w-2xl text-gray-700 dark:text-gray-300">
           Full Stack Developer especializado en NestJS, PostgreSQL, Angular,
           Ionic, React, Next.js, Docker y Linux.  
+          en Cloud: Azure, Oracle, Render.
           Actualmente especializándome en **Ciberseguridad y Pentesting Web / API**.
         </p>
       </section>
