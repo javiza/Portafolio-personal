@@ -56,8 +56,8 @@ export default function Home() {
           <Image
             src="/foto.png"
             alt="Jonathan"
-            width={180}
-            height={180}
+            width={200}
+            height={200}
             className=" shadow-xl border-4 border-purple-300 dark:border-purple-800"
           />
         </motion.div>
