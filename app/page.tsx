@@ -54,7 +54,7 @@ export default function Home() {
           transition={{ duration: 0.8 }}
         >
           <Image
-            src="/foto.jpg"
+            src="/foto.png"
             alt="Jonathan"
             width={180}
             height={180}
