@@ -58,7 +58,7 @@ export default function Home() {
             alt="Jonathan"
             width={180}
             height={180}
-            className="rounded-full shadow-xl border-4 border-purple-300 dark:border-purple-800"
+            className=" shadow-xl border-4 border-purple-300 dark:border-purple-800"
           />
         </motion.div>
 
