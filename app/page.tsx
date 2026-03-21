@@ -235,33 +235,7 @@ export default function Home() {
   </div>
 </section>
 
-      {/* REDES */}
-      <section className="mt-16 flex flex-col items-center gap-6 px-6">
-        <h2 className="title-section text-3xl">Redes Profesionales</h2>
-
-        <div className="flex flex-wrap justify-center gap-6">
-          <motion.a
-            href="https://github.com/javiza"
-            target="_blank"
-            whileHover={{ scale: 1.08 }}
-            className="flex items-center gap-3 px-6 py-3 
-            bg-gray-900 dark:bg-gray-700 text-white 
-            rounded-full shadow-lg"
-          >
-            <SiGit className="text-2xl" /> GitHub
-          </motion.a>
-
-          <motion.a
-            href="https://linkedin.com/in/jonathan-bustos-r"
-            target="_blank"
-            whileHover={{ scale: 1.08 }}
-            className="flex items-center gap-3 px-6 py-3 
-            bg-blue-600 text-white rounded-full shadow-lg"
-          >
-            LinkedIn
-          </motion.a>
-        </div>
-      </section>
+     
 
      {/* HABILIDADES FULLSTACK */}
 <section className="px-8 py-20 max-w-6xl mx-auto">
