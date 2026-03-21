@@ -36,7 +36,7 @@ import { FaBug } from "react-icons/fa";
 import BackgroundParticles from "./components/BackgroundParticles";
 
 export default function Home() {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   return (
     <main className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -57,31 +57,22 @@ export default function Home() {
 
       {/* HERO */}
       <section className="flex flex-col items-center text-center pt-24 px-6 gap-4">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.65 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Image
-            src="/foto.png"
-            alt="Jonathan"
-            width={300}
-            height={250}
-            className=" shadow-xl border-4 dark:border-purple-800"
-          />
-        </motion.div>
+      <motion.div
+  key={resolvedTheme} // 🔥 esto fuerza animación al cambiar tema
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 0.4 }}
+>
+  <Image
+    src={resolvedTheme === "dark" ? "/logo-light.png" : "/logo-dark.png"}
+    alt="Javiza Logo"
+    width={500}
+    height={300}
+    priority
+  />
+</motion.div>
 
- 
 
-  {/* NOMBRE */}
-  <motion.h1
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-    className="text-2xl sm:text-3xl font-semibold text-white-800 dark:text-dark-200"
-  >
-    Jonathan Bustos Ramos
-  </motion.h1>
 
   {/* TITULO PRINCIPAL */}
   <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold max-w-3xl bg-gradient-to-r from-blue-600 to-purple-500 text-transparent bg-clip-text">
@@ -146,7 +137,7 @@ export default function Home() {
       </h3>
 
       <p className="text-gray-600 dark:text-dark-300 leading-relaxed">
-        Soy desarrollador Full Stack con experiencia en construcción de aplicaciones web modernas, 
+        Mi nombre es Jonathan Bustos R. Soy desarrollador Full Stack con experiencia en construcción de aplicaciones web modernas, 
         APIs escalables y despliegues en entornos cloud. Me enfoco en escribir código limpio, 
         seguro y mantenible, integrando buenas prácticas de desarrollo y arquitectura.
       </p>
