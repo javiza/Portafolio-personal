@@ -10,7 +10,9 @@
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
 }
-
+html {
+  scroll-behavior: smooth;
+}
 /* ------------------------------
    TEMA OSCURO "GALAXY PRO"
 ------------------------------ */
