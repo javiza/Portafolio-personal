@@ -44,7 +44,7 @@ export type SiteSettings = {
   // Sobre mí
   about_title: string;
   about_text: string;
-  about_highlight: string;
+  about_highlights: string[]; // recuadros opcionales (frases destacadas), 100% editables por el admin
   about_soft_skills_title: string;
   about_soft_skills: string[];
   about_stack_title: string;
@@ -143,7 +143,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   about_title: "FullStack Developer",
   about_text:
     "Mi nombre es Jonathan Bustos R. Soy desarrollador Full Stack con experiencia en construcción de aplicaciones web modernas, APIs escalables y despliegues en entornos cloud. Me enfoco en escribir código limpio, seguro y mantenible, integrando buenas prácticas de desarrollo y arquitectura.",
-  about_highlight: "Ciberseguridad y Pentesting Web / API",
+  about_highlights: [], // vacío por defecto: la sección es opcional
   about_soft_skills_title: "Habilidades blandas",
   about_soft_skills: [
     "Resolución de problemas",

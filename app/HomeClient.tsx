@@ -190,14 +190,19 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_text}
       </p>
 
-      {settings.about_highlight && (
-        <p className="text-gray-600 dark:text-dark-300 leading-relaxed">
-          Actualmente estoy especializándome en{" "}
-          <span className="font-bold text-blue-600 dark:text-dark-300">
-            {settings.about_highlight}
-          </span>,
-          fortaleciendo habilidades en análisis de vulnerabilidades y seguridad ofensiva.
-        </p>
+      {settings.about_highlights && settings.about_highlights.length > 0 && (
+        <div className="space-y-3">
+          {settings.about_highlights.map((highlight, i) => (
+            <div
+              key={i}
+              className="p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20"
+            >
+              <p className="text-gray-700 dark:text-dark-300 leading-relaxed whitespace-pre-line">
+                {highlight}
+              </p>
+            </div>
+          ))}
+        </div>
       )}
 
       {/* HABILIDADES BLANDAS */}

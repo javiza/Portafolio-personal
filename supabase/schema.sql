@@ -20,7 +20,7 @@ create table if not exists site_settings (
   banner_images jsonb default '[]',
   about_title text default 'FullStack Developer',
   about_text text default '',
-  about_highlight text default '',
+  about_highlight text default '', -- (legacy, ya no se usa, ver about_highlights más abajo)
   github_url text default '',
   linkedin_url text default '',
   footer_text text default 'Full Stack · Seguridad Web',
@@ -55,6 +55,7 @@ alter table site_settings add column if not exists hero_button_secondary_href te
 alter table site_settings add column if not exists about_soft_skills_title text default 'Habilidades blandas';
 alter table site_settings add column if not exists about_soft_skills jsonb default
   '["Resolución de problemas","Pensamiento analítico","Aprendizaje continuo","Trabajo en equipo","Comunicación efectiva","Adaptabilidad a nuevas tecnologías"]';
+alter table site_settings add column if not exists about_highlights jsonb default '[]'; -- recuadros opcionales, reemplaza a about_highlight
 alter table site_settings add column if not exists about_stack_title text default 'Stack técnico';
 alter table site_settings add column if not exists about_stack_facts jsonb default '[]';
 alter table site_settings add column if not exists about_focus_label text default 'Enfoque actual:';

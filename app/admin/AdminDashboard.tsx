@@ -519,11 +519,12 @@ export default function AdminDashboard({
                   className={inputClass}
                 />
               </FieldRow>
-              <FieldRow label="Frase destacada (especialización actual)">
-                <input
-                  value={settings.about_highlight}
-                  onChange={(e) => set("about_highlight", e.target.value)}
-                  className={inputClass}
+              <FieldRow label="Recuadros destacados (opcional, agrega los que quieras)">
+                <StringListEditor
+                  items={settings.about_highlights}
+                  onChange={(next) => set("about_highlights", next)}
+                  placeholder="Ej: Titulado como Analista Programador, especializado en desarrollo Full Stack"
+                  addLabel="Agregar recuadro"
                 />
               </FieldRow>
 
