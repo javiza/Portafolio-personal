@@ -278,7 +278,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
      <section className="px-8 py-20 max-w-6xl mx-auto">
        <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
        {settings.services_description && (
-         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12">
+         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12 whitespace-pre-line">
            {settings.services_description}
          </p>
        )}
@@ -289,7 +289,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
              <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
                {item.title}
              </h3>
-             <p className="mt-3 text-gray-700 dark:text-dark-300">
+             <p className="mt-3 text-gray-700 dark:text-dark-300 whitespace-pre-line">
                {item.description}
              </p>
            </MotionDiv>
@@ -419,7 +419,7 @@ transition duration-300 rounded-xl p-4"            >
                 {project.title}
               </h3>
 
-              <p className="mt-3 text-gray-700 dark:text-dark-300">
+              <p className="mt-3 text-gray-700 dark:text-dark-300 whitespace-pre-line">
                 {project.description}
               </p>
 
