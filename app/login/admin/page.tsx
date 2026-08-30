@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { createClient } from "../../../lib/supabase/client";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -57,14 +59,24 @@ export default function AdminLoginPage() {
           onChange={(e) => setEmail(e.target.value)}
           className="border p-3 rounded"
         />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          required
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="border p-3 rounded"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border p-3 rounded w-full pr-11"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400"
+            aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+          >
+            {showPassword ? <FaEyeSlash /> : <FaEye />}
+          </button>
+        </div>
 
         {error && (
           <p className="text-sm text-red-500 text-center">{error}</p>

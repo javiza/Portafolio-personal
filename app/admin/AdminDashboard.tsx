@@ -28,6 +28,7 @@ export default function AdminDashboard({
   const [settings, setSettings] = useState<SiteSettings>(initialSettings);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [bannerUrlInput, setBannerUrlInput] = useState("");
   const [uploading, setUploading] = useState<string | null>(null);
 
   function set<K extends keyof SiteSettings>(key: K, value: SiteSettings[K]) {
@@ -139,6 +140,82 @@ export default function AdminDashboard({
         </select>
       </section>
 
+      {/* LOGO */}
+      <section className="card mb-6 space-y-4">
+        <h2 className="text-xl font-bold">🖼️ Logo</h2>
+        <p className="text-sm text-gray-500">
+          Puedes subir la imagen desde tu dispositivo o pegar directamente una
+          URL. Se usan dos versiones: una para modo claro y otra para modo
+          oscuro (si solo tienes una, puedes repetir la misma URL en ambas).
+        </p>
+
+        <div className="grid sm:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <p className="font-semibold text-sm">Logo para modo claro</p>
+            {settings.logo_dark_url && (
+              <img
+                src={settings.logo_dark_url}
+                alt="Logo modo claro"
+                className="h-16 object-contain bg-white rounded p-2"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              disabled={uploading === "logo_light_mode"}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const url = await uploadImage(file, "logo_light_mode");
+                if (url) set("logo_dark_url", url);
+                e.target.value = "";
+              }}
+            />
+            {uploading === "logo_light_mode" && (
+              <p className="text-sm">Subiendo...</p>
+            )}
+            <input
+              value={settings.logo_dark_url}
+              onChange={(e) => set("logo_dark_url", e.target.value)}
+              placeholder="...o pega una URL de imagen"
+              className="border p-2 rounded w-full text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <p className="font-semibold text-sm">Logo para modo oscuro</p>
+            {settings.logo_light_url && (
+              <img
+                src={settings.logo_light_url}
+                alt="Logo modo oscuro"
+                className="h-16 object-contain bg-gray-900 rounded p-2"
+              />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              disabled={uploading === "logo_dark_mode"}
+              onChange={async (e) => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const url = await uploadImage(file, "logo_dark_mode");
+                if (url) set("logo_light_url", url);
+                e.target.value = "";
+              }}
+            />
+            {uploading === "logo_dark_mode" && (
+              <p className="text-sm">Subiendo...</p>
+            )}
+            <input
+              value={settings.logo_light_url}
+              onChange={(e) => set("logo_light_url", e.target.value)}
+              placeholder="...o pega una URL de imagen"
+              className="border p-2 rounded w-full text-sm"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* HERO */}
       <section className="card mb-6 space-y-3">
         <h2 className="text-xl font-bold">🏠 Portada (Hero)</h2>
@@ -151,7 +228,7 @@ export default function AdminDashboard({
         <input
           value={settings.hero_subtitle}
           onChange={(e) => set("hero_subtitle", e.target.value)}
-          placeholder="Subtítulo / especialización"
+          placeholder="Slogan / subtítulo (opcional, déjalo vacío para ocultarlo)"
           className="border p-3 rounded w-full"
         />
       </section>
@@ -255,6 +332,26 @@ export default function AdminDashboard({
           }}
         />
         {uploading === "banner" && <p className="text-sm">Subiendo imagen...</p>}
+
+        <div className="flex gap-2">
+          <input
+            value={bannerUrlInput}
+            onChange={(e) => setBannerUrlInput(e.target.value)}
+            placeholder="...o pega una URL de imagen y presiona Agregar"
+            className="border p-2 rounded flex-1 text-sm"
+          />
+          <button
+            onClick={() => {
+              const url = bannerUrlInput.trim();
+              if (!url) return;
+              set("banner_images", [...settings.banner_images, { url }]);
+              setBannerUrlInput("");
+            }}
+            className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm"
+          >
+            Agregar
+          </button>
+        </div>
       </section>
 
       {/* NOTICIAS */}
