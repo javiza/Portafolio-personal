@@ -1,43 +1,58 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps } from "framer-motion";
 import Image from "next/image";
-
-import {
-  SiNextdotjs,
-  SiReact,
-  SiNestjs,
-  SiPostgresql,
-  SiAngular,
-  SiDocker,
-  SiLinux,
-  SiGit,
-  SiTypescript,
-  SiIonic,
-  SiMongodb,
-  SiExpress,
-  SiPostman,
-  SiSwagger,
-  SiOwasp,
-  SiPython,
-   
-   SiRender,
-   SiKubernetes,
-   SiApachespark,
-   SiApachekafka,
-   SiJavascript,
-   SiNodedotjs,
-} from "react-icons/si";
 import Link from "next/link";
-import { MdSecurity } from "react-icons/md";
-import { FaBug } from "react-icons/fa";
+import type { ReactNode } from "react";
+import { SiGit } from "react-icons/si";
 
 import BackgroundParticles from "./components/BackgroundParticles";
 import type { SiteSettings } from "../types/settings";
+import { getIcon } from "../lib/icons";
+
+// Cuando enable_effects está apagado, estos wrappers renderizan un <div>/<a>
+// plano en vez de un componente animado de framer-motion. Así el
+// administrador puede desactivar partículas + animaciones sin que el resto
+// del código tenga que duplicarse.
+function MotionDiv({
+  enabled,
+  className,
+  children,
+  ...motionProps
+}: { enabled: boolean; className?: string; children?: ReactNode } & HTMLMotionProps<"div">) {
+  if (!enabled) return <div className={className}>{children}</div>;
+  return (
+    <motion.div className={className} {...motionProps}>
+      {children}
+    </motion.div>
+  );
+}
+
+function MotionA({
+  enabled,
+  className,
+  children,
+  href,
+  target,
+  ...motionProps
+}: { enabled: boolean; className?: string; children?: ReactNode; href: string; target?: string } & HTMLMotionProps<"a">) {
+  if (!enabled)
+    return (
+      <a href={href} target={target} className={className}>
+        {children}
+      </a>
+    );
+  return (
+    <motion.a href={href} target={target} className={className} {...motionProps}>
+      {children}
+    </motion.a>
+  );
+}
 
 export default function HomeClient({ settings }: { settings: SiteSettings }) {
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const fx = settings.enable_effects;
 
   const sectionVisible: Record<string, boolean> = {
     about: settings.show_about,
@@ -58,7 +73,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         } as React.CSSProperties
       }
     >
-      <BackgroundParticles />
+      {fx && <BackgroundParticles />}
 
       {/* BOTÓN DE TEMA */}
       <button
@@ -75,12 +90,13 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
 
       {/* HERO */}
       <section className="flex flex-col items-center text-center pt-24 px-6 gap-4">
-      <motion.div
-  key={resolvedTheme} // 🔥 esto fuerza animación al cambiar tema
-  initial={{ opacity: 0, scale: 0.9 }}
-  animate={{ opacity: 1, scale: 1 }}
-  transition={{ duration: 0.4 }}
->
+      <MotionDiv
+        enabled={fx}
+        key={resolvedTheme} // 🔥 esto fuerza animación al cambiar tema
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+      >
   <Image
     src={resolvedTheme === "dark" ? settings.logo_light_url : settings.logo_dark_url}
     alt="Logo"
@@ -88,7 +104,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
     height={300}
     priority
   />
-</motion.div>
+</MotionDiv>
 
 
 
@@ -110,43 +126,48 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
   }}
 ></div>
   {/* ESPECIALIZACIÓN */}
-  <p className="text-lg sm:text-xl font-bold text-white-600 dark:text-dark-300">
-    {settings.hero_subtitle}
-  </p>
+  {settings.hero_subtitle && (
+    <p className="text-lg sm:text-xl font-bold text-white-600 dark:text-dark-300">
+      {settings.hero_subtitle}
+    </p>
+  )}
 
   {/* TERMINAL EFFECT */}
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ delay: 1 }}
-    className="mt-4 space-y-1"
-  >
-    <p className="font-mono text-green-500">
-      $ initializing_security_modules...
-    </p>
-    <p className="font-mono text-green-500">
-      $ scanning_web_applications...
-    </p>
-    <p className="font-mono text-green-500">
-      $ pentesting_mode_enabled ✓
-    </p>
-  </motion.div>
+  {settings.hero_terminal_lines.length > 0 && (
+    <MotionDiv
+      enabled={fx}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 1 }}
+      className="mt-4 space-y-1"
+    >
+      {settings.hero_terminal_lines.map((line, i) => (
+        <p key={i} className="font-mono text-green-500">
+          {line}
+        </p>
+      ))}
+    </MotionDiv>
+  )}
 
   {/* BOTONES */}
   <div className="flex gap-4 mt-6 flex-wrap justify-center">
-    <a
-      href="#proyectos"
-      className="px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:scale-105 transition"
-    >
-      Ver Proyectos
-    </a>
+    {settings.hero_button_primary_label && (
+      <a
+        href={settings.hero_button_primary_href || "#"}
+        className="px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:scale-105 transition"
+      >
+        {settings.hero_button_primary_label}
+      </a>
+    )}
 
-     <a
-            href="#contacto"
-            className="px-6 py-3 border border-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition"
-          >
-            Contactar
-          </a>
+    {settings.hero_button_secondary_label && (
+      <a
+        href={settings.hero_button_secondary_href || "#"}
+        className="px-6 py-3 border border-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition"
+      >
+        {settings.hero_button_secondary_label}
+      </a>
+    )}
   </div>
 
 </section>
@@ -169,84 +190,83 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_text}
       </p>
 
-      <p className="text-gray-600 dark:text-dark-300 leading-relaxed">
-        Actualmente estoy especializándome en{" "}
-        <span className="font-bold text-blue-600 dark:text-dark-300">
-          {settings.about_highlight}
-        </span>, 
-        fortaleciendo habilidades en análisis de vulnerabilidades y seguridad ofensiva.
-      </p>
+      {settings.about_highlight && (
+        <p className="text-gray-600 dark:text-dark-300 leading-relaxed">
+          Actualmente estoy especializándome en{" "}
+          <span className="font-bold text-blue-600 dark:text-dark-300">
+            {settings.about_highlight}
+          </span>,
+          fortaleciendo habilidades en análisis de vulnerabilidades y seguridad ofensiva.
+        </p>
+      )}
 
       {/* HABILIDADES BLANDAS */}
-      <div>
-        <h4 className="font-semibold mb-2">Habilidades blandas</h4>
-        <ul className="list-disc list-inside text-gray-600 dark:text-dark-300 space-y-1">
-          <li>Resolución de problemas</li>
-          <li>Pensamiento analítico</li>
-          <li>Aprendizaje continuo</li>
-          <li>Trabajo en equipo</li>
-          <li>Comunicación efectiva</li>
-          <li>Adaptabilidad a nuevas tecnologías</li>
-        </ul>
-      </div>
+      {settings.about_soft_skills.length > 0 && (
+        <div>
+          <h4 className="font-semibold mb-2">{settings.about_soft_skills_title}</h4>
+          <ul className="list-disc list-inside text-gray-600 dark:text-dark-300 space-y-1">
+            {settings.about_soft_skills.map((skill, i) => (
+              <li key={i}>{skill}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
 
     {/* COLUMNA DERECHA */}
     <div className="card space-y-4">
       <h4 className="text-xl font-semibold mb-2">
-        Stack técnico
+        {settings.about_stack_title}
       </h4>
 
       <div className="space-y-3 text-gray-600 dark:text-dark-300">
-
-        <p><strong>Lenguajes:</strong> JavaScript, TypeScript, Python, Java, C#</p>
-
-        <p><strong>Frontend:</strong> React, Next.js, Angular, Ionic</p>
-
-        <p><strong>Backend:</strong> Node.js, NestJS, Express</p>
-
-        <p><strong>Bases de datos:</strong> PostgreSQL, MongoDB, Oracle SQL, PL/SQL</p>
-
-        <p><strong>DevOps:</strong> Docker, Kubernetes, Linux, Git</p>
-
-        <p><strong>Cloud:</strong> Azure, Oracle Cloud, Render</p>
-
-        <p><strong>Big Data:</strong> Apache Spark, Apache Kafka</p>
-
+        {settings.about_stack_facts.map((fact, i) => (
+          <p key={i}><strong>{fact.label}:</strong> {fact.value}</p>
+        ))}
       </div>
 
       {/* EXTRA DESTACADO */}
-      <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20">
-        <p className="text-sm font-medium text-gray-700 dark:text-dark-300">
-          Enfoque actual:
-        </p>
-        <p className="font-bold text-blue-600 dark:text-dark-300">
-          Seguridad en aplicaciones web, APIs y testing ofensivo
-        </p>
-      </div>
-      <h2  className="text-xl font-semibold mb-2">Redes Profesionales</h2>
+      {settings.about_focus_text && (
+        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20">
+          <p className="text-sm font-medium text-gray-700 dark:text-dark-300">
+            {settings.about_focus_label}
+          </p>
+          <p className="font-bold text-blue-600 dark:text-dark-300">
+            {settings.about_focus_text}
+          </p>
+        </div>
+      )}
+      {settings.about_social_title && (
+        <h2 className="text-xl font-semibold mb-2">{settings.about_social_title}</h2>
+      )}
 
         <div className="flex flex-wrap justify-center gap-6">
-          <motion.a
-            href={settings.github_url}
-            target="_blank"
-            whileHover={{ scale: 1.08 }}
-            className="flex items-center gap-3 px-6 py-3 
-            bg-gray-900 dark:bg-gray-700 text-white 
-            rounded-full shadow-lg"
-          >
-            <SiGit className="text-2xl" /> GitHub
-          </motion.a>
+          {settings.github_url && (
+            <MotionA
+              enabled={fx}
+              href={settings.github_url}
+              target="_blank"
+              whileHover={{ scale: 1.08 }}
+              className="flex items-center gap-3 px-6 py-3 
+              bg-gray-900 dark:bg-gray-700 text-white 
+              rounded-full shadow-lg"
+            >
+              <SiGit className="text-2xl" /> GitHub
+            </MotionA>
+          )}
 
-          <motion.a
-            href={settings.linkedin_url}
-            target="_blank"
-            whileHover={{ scale: 1.08 }}
-            className="flex items-center gap-3 px-6 py-3 
-            bg-blue-600 text-white rounded-full shadow-lg"
-          >
-            LinkedIn
-          </motion.a>
+          {settings.linkedin_url && (
+            <MotionA
+              enabled={fx}
+              href={settings.linkedin_url}
+              target="_blank"
+              whileHover={{ scale: 1.08 }}
+              className="flex items-center gap-3 px-6 py-3 
+              bg-blue-600 text-white rounded-full shadow-lg"
+            >
+              LinkedIn
+            </MotionA>
+          )}
         </div>
     </div>
 
@@ -256,92 +276,48 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
 
 {sectionVisible.services && (
      <section className="px-8 py-20 max-w-6xl mx-auto">
-       <h2 className="title-section mb-4 text-center">Servicios</h2>
-       <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12">
-         Desarrollo aplicaciones web a medida para negocios y proyectos
-         personales, desde el diseño hasta el despliegue en producción.
-       </p>
+       <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
+       {settings.services_description && (
+         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12">
+           {settings.services_description}
+         </p>
+       )}
 
        <div className="grid md:grid-cols-3 gap-6">
-         <motion.div whileHover={{ scale: 1.04 }} className="card">
-           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
-             Desarrollo Web a Medida
-           </h3>
-           <p className="mt-3 text-gray-700 dark:text-dark-300">
-             Sitios y sistemas web para empresas: catálogos, reservas,
-             paneles administrativos y más, con Next.js y React.
-           </p>
-         </motion.div>
-
-         <motion.div whileHover={{ scale: 1.04 }} className="card">
-           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
-             APIs y Backends
-           </h3>
-           <p className="mt-3 text-gray-700 dark:text-dark-300">
-             APIs seguras y escalables con NestJS/Node.js, autenticación
-             JWT y bases de datos PostgreSQL o MongoDB.
-           </p>
-         </motion.div>
-
-         <motion.div whileHover={{ scale: 1.04 }} className="card">
-           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
-             Seguridad Web
-           </h3>
-           <p className="mt-3 text-gray-700 dark:text-dark-300">
-             Revisión de vulnerabilidades OWASP, pruebas de seguridad en
-             APIs y hardening de aplicaciones antes de salir a producción.
-           </p>
-         </motion.div>
+         {settings.services_items.map((item, i) => (
+           <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
+             <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+               {item.title}
+             </h3>
+             <p className="mt-3 text-gray-700 dark:text-dark-300">
+               {item.description}
+             </p>
+           </MotionDiv>
+         ))}
        </div>
 
-       <div className="flex justify-center mt-10">
-         <a
-           href="#contacto"
-           className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all"
-         >
-           Solicitar una cotización
-         </a>
-       </div>
+       {settings.services_cta_label && (
+         <div className="flex justify-center mt-10">
+           <a
+             href={settings.services_cta_href || "#"}
+             className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all"
+           >
+             {settings.services_cta_label}
+           </a>
+         </div>
+       )}
      </section>
 )}
 
      {/* HABILIDADES FULLSTACK */}
 {sectionVisible.stack && (
 <section className="px-8 py-20 max-w-6xl mx-auto">
-  <h2 className="title-section mb-12">Stack de Desarrollo</h2>
+  <h2 className="title-section mb-12">{settings.stack_title}</h2>
 
   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-    {[
-      // Frontend
-      { icon: <SiNextdotjs />, name: "NextJS" },
-      { icon: <SiReact />, name: "React" },
-      { icon: <SiAngular />, name: "Angular" },
-      { icon: <SiIonic />, name: "Ionic" },
-
-      // Backend
-      { icon: <SiNestjs />, name: "NestJS" },
-      { icon: <SiExpress />, name: "Express" },
-      { icon: <SiNodedotjs />, name: "Node.js" },
-
-    
-      // Bases de datos
-      { icon: <SiPostgresql />, name: "PostgreSQL" },
-      { icon: <SiMongodb />, name: "MongoDB" },
-
-      // DevOps / Sistemas
-      { icon: <SiDocker />, name: "Docker" },
-      { icon: <SiKubernetes />, name: "Kubernetes" },
-      { icon: <SiLinux />, name: "Linux" },
-      { icon: <SiGit />, name: "Git" },
-
-      
-
-      // Big Data
-      { icon: <SiApachespark />, name: "Apache Spark" },
-      { icon: <SiApachekafka />, name: "Apache Kafka" },
-
-    ].map((skill, i) => (
-      <motion.div
+    {settings.stack_items.map((skill, i) => (
+      <MotionDiv
+        enabled={fx}
         key={i}
         whileHover={{ scale: 1.08, rotate: 1 }}
         className="flex flex-col items-center gap-2 
@@ -351,13 +327,13 @@ shadow-md hover:shadow-xl hover:-translate-y-1
 transition duration-300 rounded-xl p-4"
       >
         <div className="text-4xl text-blue-600 dark:text-purple-300">
-          {skill.icon}
+          {getIcon(skill.icon)}
         </div>
 
         <p className="font-semibold text-gray-800 dark:text-purple-200">
           {skill.name}
         </p>
-      </motion.div>
+      </MotionDiv>
     ))}
   </div>
 </section>
@@ -366,20 +342,12 @@ transition duration-300 rounded-xl p-4"
       {/* HABILIDADES CIBERSEGURIDAD */}
       {sectionVisible.security && (
       <section className="px-8 pb-20 max-w-6xl mx-auto">
-        <h2 className="title-section mb-12">Ciberseguridad</h2>
+        <h2 className="title-section mb-12">{settings.security_title}</h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[
-            { icon: <SiOwasp />, name: "OWASP Top 10" },
-            { icon: <FaBug />, name: "SQL Injection" },
-            { icon: <FaBug />, name: "Cross Site Scripting" },
-            { icon: <MdSecurity />, name: "Broken Access Control" },
-            { icon: <MdSecurity />, name: "API Security Testing" },
-            { icon: <MdSecurity />, name: "JWT Security" },
-            { icon: <SiPostman />, name: "Postman" },
-            { icon: <SiSwagger />, name: "Swagger / OpenAPI" },
-          ].map((skill, i) => (
-            <motion.div
+          {settings.security_items.map((skill, i) => (
+            <MotionDiv
+              enabled={fx}
               key={i}
               whileHover={{ scale: 1.05 }}
 className="flex flex-col items-center gap-2 
@@ -387,12 +355,12 @@ bg-white dark:bg-[#160b34]
 border border-gray-200 dark:border-purple-700 
 shadow-md hover:shadow-xl hover:-translate-y-1
 transition duration-300 rounded-xl p-4"            >
-              <div className="text-4xl text-red-500">{skill.icon}</div>
+              <div className="text-4xl text-red-500">{getIcon(skill.icon)}</div>
 
               <p className="font-semibold text-gray-800 dark:text-gray-200">
                 {skill.name}
               </p>
-            </motion.div>
+            </MotionDiv>
           ))}
         </div>
       </section>
@@ -439,56 +407,32 @@ transition duration-300 rounded-xl p-4"            >
       {/* PROYECTOS */}
       {sectionVisible.projects && (
       <section id="proyectos" className="px-8 py-10">
-        <h2 className="title-section mb-12">Proyectos Destacados</h2>
+        <h2 className="title-section mb-12">{settings.projects_title}</h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          <motion.div whileHover={{ scale: 1.04 }} className="card">
-            <h3 className="text-2xl font-semibold text-blue-600 dark:text-dark-300">
-              Sistema de Condominio
-            </h3>
+          {settings.projects_items.map((project, i) => (
+            <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
+              <h3
+                className="text-2xl font-semibold"
+                style={project.color ? { color: project.color } : undefined}
+              >
+                {project.title}
+              </h3>
 
-            <p className="mt-3 text-gray-700 dark:text-dark-300">
-              Control de accesos con QR dinámico, auditoría en tiempo real y
-              panel administrativo.
-            </p>
+              <p className="mt-3 text-gray-700 dark:text-dark-300">
+                {project.description}
+              </p>
 
-            <Link
-              href="/proyecto_condominio"
-              className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
-            >
-              Ver Detalles →
-            </Link>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.04 }} className="card">
-            <h3 className="text-2xl font-semibold text-green-600">
-              Agencia de Turismo Online
-            </h3>
-
-            <p className="mt-3 text-gray-700 dark:text-dark-300">
-              Sitio web comercial con catálogo de destinos, paquetes y
-              ofertas, reservas online y panel administrativo propio.
-            </p>
-
-            <Link
-              href="/proyecto_turismo"
-              className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
-            >
-              Ver Detalles →
-            </Link>
-          </motion.div>
-
-          <motion.div whileHover={{ scale: 1.04 }} className="card">
-            <h3 className="text-2xl font-semibold text-purple-600">
-              API REST & Dashboards en Tiempo Real
-            </h3>
-
-            <p className="mt-3 text-gray-700 dark:text-dark-300">
-              Backends con NestJS y autenticación JWT, y dashboards con
-              WebSockets y métricas en vivo, integrados a los proyectos
-              anteriores.
-            </p>
-          </motion.div>
+              {project.link && (
+                <Link
+                  href={project.link}
+                  className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
+                >
+                  {project.linkLabel || "Ver Detalles →"}
+                </Link>
+              )}
+            </MotionDiv>
+          ))}
         </div>
       </section>
       )}
@@ -496,7 +440,7 @@ transition duration-300 rounded-xl p-4"            >
       {/* CONTACTO */}
       {sectionVisible.contact && (
       <section id="contacto" className="px-8 py-20 max-w-3xl mx-auto">
-        <h2 className="title-section mb-12">Contacto:</h2>
+        <h2 className="title-section mb-12">{settings.contact_title}</h2>
         <form
           className="card flex flex-col gap-4"
           onSubmit={async (e) => {

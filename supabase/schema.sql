@@ -1,5 +1,8 @@
 -- =========================================================
 -- Ejecutar esto en Supabase → SQL Editor
+-- Este script es idempotente: sirve tanto para crear la base
+-- desde cero como para migrar una base ya existente (agrega
+-- solo las columnas que falten, sin tocar tus datos actuales).
 -- =========================================================
 
 -- 1) Tabla de configuración del sitio (una sola fila, id = 1)
@@ -34,6 +37,47 @@ create table if not exists site_settings (
   updated_at timestamptz default now()
 );
 
+-- 1.1) Migración: columnas nuevas del panel "control total del home".
+-- Cada línea es segura de re-ejecutar (IF NOT EXISTS).
+alter table site_settings add column if not exists favicon_url text default '/favicon.ico';
+alter table site_settings add column if not exists browser_tab_title text default 'Jonathan Bustos | Desarrollador Full Stack & Pentester Web';
+
+alter table site_settings add column if not exists default_theme text default 'light';
+alter table site_settings add column if not exists enable_effects boolean default true;
+
+alter table site_settings add column if not exists hero_terminal_lines jsonb default
+  '["$ initializing_security_modules...","$ scanning_web_applications...","$ pentesting_mode_enabled ✓"]';
+alter table site_settings add column if not exists hero_button_primary_label text default 'Ver Proyectos';
+alter table site_settings add column if not exists hero_button_primary_href text default '#proyectos';
+alter table site_settings add column if not exists hero_button_secondary_label text default 'Contactar';
+alter table site_settings add column if not exists hero_button_secondary_href text default '#contacto';
+
+alter table site_settings add column if not exists about_soft_skills_title text default 'Habilidades blandas';
+alter table site_settings add column if not exists about_soft_skills jsonb default
+  '["Resolución de problemas","Pensamiento analítico","Aprendizaje continuo","Trabajo en equipo","Comunicación efectiva","Adaptabilidad a nuevas tecnologías"]';
+alter table site_settings add column if not exists about_stack_title text default 'Stack técnico';
+alter table site_settings add column if not exists about_stack_facts jsonb default '[]';
+alter table site_settings add column if not exists about_focus_label text default 'Enfoque actual:';
+alter table site_settings add column if not exists about_focus_text text default '';
+alter table site_settings add column if not exists about_social_title text default 'Redes Profesionales';
+
+alter table site_settings add column if not exists services_title text default 'Servicios';
+alter table site_settings add column if not exists services_description text default '';
+alter table site_settings add column if not exists services_items jsonb default '[]';
+alter table site_settings add column if not exists services_cta_label text default 'Solicitar una cotización';
+alter table site_settings add column if not exists services_cta_href text default '#contacto';
+
+alter table site_settings add column if not exists stack_title text default 'Stack de Desarrollo';
+alter table site_settings add column if not exists stack_items jsonb default '[]';
+
+alter table site_settings add column if not exists security_title text default 'Ciberseguridad';
+alter table site_settings add column if not exists security_items jsonb default '[]';
+
+alter table site_settings add column if not exists projects_title text default 'Proyectos Destacados';
+alter table site_settings add column if not exists projects_items jsonb default '[]';
+
+alter table site_settings add column if not exists contact_title text default 'Contacto:';
+
 -- Fila inicial (si no existe)
 insert into site_settings (id) values (1)
 on conflict (id) do nothing;
@@ -42,17 +86,20 @@ on conflict (id) do nothing;
 alter table site_settings enable row level security;
 
 -- Cualquier visitante puede LEER la configuración (para que el home público funcione)
+drop policy if exists "Lectura pública de site_settings" on site_settings;
 create policy "Lectura pública de site_settings"
 on site_settings for select
 to anon, authenticated
 using (true);
 
 -- Solo un usuario autenticado (el admin) puede modificarla
+drop policy if exists "Solo admin puede escribir site_settings" on site_settings;
 create policy "Solo admin puede escribir site_settings"
 on site_settings for insert
 to authenticated
 with check (true);
 
+drop policy if exists "Solo admin puede actualizar site_settings" on site_settings;
 create policy "Solo admin puede actualizar site_settings"
 on site_settings for update
 to authenticated
@@ -60,22 +107,26 @@ using (true)
 with check (true);
 
 -- 3) Bucket de almacenamiento para imágenes subidas desde el panel
+-- (se reutiliza también para el favicon)
 insert into storage.buckets (id, name, public)
 values ('site-images', 'site-images', true)
 on conflict (id) do nothing;
 
 -- Cualquiera puede VER las imágenes (son públicas, es un sitio web)
+drop policy if exists "Lectura pública de imágenes" on storage.objects;
 create policy "Lectura pública de imágenes"
 on storage.objects for select
 to anon, authenticated
 using (bucket_id = 'site-images');
 
 -- Solo un usuario autenticado puede subir/editar imágenes
+drop policy if exists "Solo admin puede subir imágenes" on storage.objects;
 create policy "Solo admin puede subir imágenes"
 on storage.objects for insert
 to authenticated
 with check (bucket_id = 'site-images');
 
+drop policy if exists "Solo admin puede actualizar imágenes" on storage.objects;
 create policy "Solo admin puede actualizar imágenes"
 on storage.objects for update
 to authenticated
