@@ -226,7 +226,55 @@ export default function Home() {
   </div>
 </section>
 
-     
+     {/* SERVICIOS */}
+     <section className="px-8 py-20 max-w-6xl mx-auto">
+       <h2 className="title-section mb-4 text-center">Servicios</h2>
+       <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12">
+         Desarrollo aplicaciones web a medida para negocios y proyectos
+         personales, desde el diseño hasta el despliegue en producción.
+       </p>
+
+       <div className="grid md:grid-cols-3 gap-6">
+         <motion.div whileHover={{ scale: 1.04 }} className="card">
+           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+             Desarrollo Web a Medida
+           </h3>
+           <p className="mt-3 text-gray-700 dark:text-dark-300">
+             Sitios y sistemas web para empresas: catálogos, reservas,
+             paneles administrativos y más, con Next.js y React.
+           </p>
+         </motion.div>
+
+         <motion.div whileHover={{ scale: 1.04 }} className="card">
+           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+             APIs y Backends
+           </h3>
+           <p className="mt-3 text-gray-700 dark:text-dark-300">
+             APIs seguras y escalables con NestJS/Node.js, autenticación
+             JWT y bases de datos PostgreSQL o MongoDB.
+           </p>
+         </motion.div>
+
+         <motion.div whileHover={{ scale: 1.04 }} className="card">
+           <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+             Seguridad Web
+           </h3>
+           <p className="mt-3 text-gray-700 dark:text-dark-300">
+             Revisión de vulnerabilidades OWASP, pruebas de seguridad en
+             APIs y hardening de aplicaciones antes de salir a producción.
+           </p>
+         </motion.div>
+       </div>
+
+       <div className="flex justify-center mt-10">
+         <a
+           href="#contacto"
+           className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all"
+         >
+           Solicitar una cotización
+         </a>
+       </div>
+     </section>
 
      {/* HABILIDADES FULLSTACK */}
 <section className="px-8 py-20 max-w-6xl mx-auto">
@@ -342,22 +390,31 @@ transition duration-300 rounded-xl p-4"            >
 
           <motion.div whileHover={{ scale: 1.04 }} className="card">
             <h3 className="text-2xl font-semibold text-green-600">
-              API REST NestJS
+              Agencia de Turismo Online
             </h3>
 
             <p className="mt-3 text-gray-700 dark:text-dark-300">
-              API profesional con autenticación JWT, validaciones y arquitectura
-              modular.
+              Sitio web comercial con catálogo de destinos, paquetes y
+              ofertas, reservas online y panel administrativo propio.
             </p>
+
+            <Link
+              href="/proyecto_turismo"
+              className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
+            >
+              Ver Detalles →
+            </Link>
           </motion.div>
 
           <motion.div whileHover={{ scale: 1.04 }} className="card">
             <h3 className="text-2xl font-semibold text-purple-600">
-              Dashboard Tiempo Real
+              API REST & Dashboards en Tiempo Real
             </h3>
 
             <p className="mt-3 text-gray-700 dark:text-dark-300">
-              Dashboard con WebSockets y métricas en vivo.
+              Backends con NestJS y autenticación JWT, y dashboards con
+              WebSockets y métricas en vivo, integrados a los proyectos
+              anteriores.
             </p>
           </motion.div>
         </div>
