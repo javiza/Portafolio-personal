@@ -20,7 +20,7 @@ export default function XSSLab() {
       <input
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="border p-3 rounded w-full"
+        className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded w-full"
         placeholder="Escribe algo..."
       />
 

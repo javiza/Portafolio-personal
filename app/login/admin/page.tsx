@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] p-3 pl-10 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition"
+              className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 pl-10 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition"
             />
           </div>
 
@@ -90,7 +90,7 @@ export default function AdminLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] p-3 pl-10 pr-11 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition"
+              className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 pl-10 pr-11 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition"
             />
             <button
               type="button"

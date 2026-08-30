@@ -10,7 +10,7 @@ import type {
 } from "../../types/settings";
 
 export const inputClass =
-  "border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition";
+  "border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg w-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/60 dark:focus:ring-purple-500/60 transition";
 
 export const labelClass =
   "text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-purple-300/70";

@@ -229,34 +229,55 @@ export default function AdminDashboard({
                   Es el ícono pequeño que aparece en la pestaña del navegador. Usa una
                   imagen cuadrada (.png o .ico) para mejores resultados.
                 </p>
-                <div className="flex items-center gap-4">
+                <div className="flex items-start gap-4">
                   {settings.favicon_url && (
                     <img
                       src={settings.favicon_url}
                       alt="Favicon actual"
-                      className="w-10 h-10 object-contain bg-white rounded border p-1"
+                      className="w-10 h-10 object-contain bg-white rounded border p-1 shrink-0"
                     />
                   )}
-                  <div className="flex-1 space-y-2">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      disabled={uploading === "favicon"}
-                      onChange={async (e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const url = await uploadImage(file, "favicon");
-                        if (url) set("favicon_url", url);
-                        e.target.value = "";
-                      }}
-                    />
-                    {uploading === "favicon" && <p className="text-sm">Subiendo...</p>}
-                    <input
-                      value={settings.favicon_url}
-                      onChange={(e) => set("favicon_url", e.target.value)}
-                      placeholder="...o pega una URL de imagen"
-                      className={inputClass}
-                    />
+                  <div className="flex-1 space-y-4">
+                    <div className="space-y-1.5">
+                      <label className={labelClass}>Opción 1: subir desde tu dispositivo</label>
+                      <label
+                        htmlFor="favicon-file-input"
+                        className={`flex items-center justify-center gap-2 text-sm px-4 py-3 rounded-lg border-2 border-dashed cursor-pointer transition ${
+                          uploading === "favicon"
+                            ? "border-gray-300 dark:border-purple-700/40 opacity-60 cursor-wait"
+                            : "border-blue-400 dark:border-purple-500/60 text-blue-600 dark:text-purple-300 hover:bg-blue-50 dark:hover:bg-white/5"
+                        }`}
+                      >
+                        {uploading === "favicon" ? "Subiendo..." : "📁 Elegir imagen desde el dispositivo"}
+                      </label>
+                      <input
+                        id="favicon-file-input"
+                        type="file"
+                        accept="image/*"
+                        disabled={uploading === "favicon"}
+                        className="hidden"
+                        onChange={async (e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const url = await uploadImage(file, "favicon");
+                          if (url) set("favicon_url", url);
+                          e.target.value = "";
+                        }}
+                      />
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+                      <span className="flex-1 h-px bg-gray-200 dark:bg-purple-700/30" />
+                      o
+                      <span className="flex-1 h-px bg-gray-200 dark:bg-purple-700/30" />
+                    </div>
+                    <FieldRow label="Opción 2: pegar una URL de imagen">
+                      <input
+                        value={settings.favicon_url}
+                        onChange={(e) => set("favicon_url", e.target.value)}
+                        placeholder="https://ejemplo.com/favicon.png"
+                        className={inputClass}
+                      />
+                    </FieldRow>
                   </div>
                 </div>
                 <FieldRow label="Título de la pestaña del navegador">

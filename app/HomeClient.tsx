@@ -467,21 +467,21 @@ transition duration-300 rounded-xl p-4"            >
             name="nombre"
             placeholder="Tu nombre"
             required
-            className="border p-3 rounded"
+            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
           />
           <input
             name="email"
             type="email"
             placeholder="Tu correo"
             required
-            className="border p-3 rounded"
+            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
           />
           <textarea
             name="mensaje"
             rows={5}
             placeholder="Mensaje..."
             required
-            className="border p-3 rounded"
+            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
           ></textarea>
 
           <button className="px-6 py-3 bg-blue-600 text-white rounded-full">

@@ -35,14 +35,14 @@ export default function SQLLab() {
           placeholder="usuario"
           value={user}
           onChange={(e) => setUser(e.target.value)}
-          className="border p-3 rounded"
+          className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded"
         />
 
         <input
           placeholder="password"
           value={pass}
           onChange={(e) => setPass(e.target.value)}
-          className="border p-3 rounded"
+          className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded"
         />
 
         <button
