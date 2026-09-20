@@ -9,6 +9,15 @@ export type ProjectItem = {
   color?: string;
 };
 
+// Sección 100% personalizada creada desde el panel: título libre +
+// texto libre. Se identifica con un id único que no cambia aunque se
+// renombre el título (así "section_order" no se rompe al renombrar).
+export type CustomSection = {
+  id: string;
+  title: string;
+  content: string;
+};
+
 export type SiteSettings = {
   // Identidad del sitio
   favicon_url: string;
@@ -38,6 +47,13 @@ export type SiteSettings = {
   default_theme: "light" | "dark";
   enable_effects: boolean; // partículas de fondo + animaciones extra
 
+  // Fondos opcionales adicionales a las partículas. Independientes entre
+  // sí: se pueden combinar libremente o dejar todos vacíos/apagados.
+  hero_bg_image_url: string; // imagen de fondo solo detrás del hero/inicio
+  hero_bg_overlay_opacity: number; // 0 a 1, oscurece la imagen del hero para que se lea el texto
+  page_bg_image_url: string; // imagen de fondo fija detrás de toda la página
+  page_bg_image_opacity: number; // 0 a 1, qué tan visible es la imagen de fondo completa
+
   // Hero
   hero_title: string;
   hero_subtitle: string;
@@ -53,6 +69,7 @@ export type SiteSettings = {
   banner_images: { url: string; caption?: string }[];
 
   // Sobre mí
+  about_section_title: string; // título de la sección completa (antes venía fijo como "Sobre mí")
   about_title: string;
   about_text: string;
   about_highlights: string[]; // recuadros opcionales (frases destacadas), 100% editables por el admin
@@ -94,6 +111,7 @@ export type SiteSettings = {
   footer_text: string;
 
   // Noticias / novedades (opcional, se muestran si hay al menos una)
+  news_title: string; // título de la sección completa (antes venía fijo como "Noticias")
   news: { title: string; content: string; date?: string }[];
 
   // Visibilidad de secciones (todo opcional, como pidió el usuario)
@@ -106,17 +124,30 @@ export type SiteSettings = {
   show_banner: boolean;
   show_contact: boolean;
 
-  // Orden de las secciones principales en el home
-  section_order: (
-    | "about"
-    | "services"
-    | "stack"
-    | "security"
-    | "projects"
-    | "news"
-    | "contact"
-  )[];
+  // Secciones 100% personalizadas agregadas desde el panel (además de
+  // las fijas de arriba). Se pueden crear, renombrar y eliminar todas
+  // las que se quiera.
+  custom_sections: CustomSection[];
+
+  // Orden y ubicación de TODOS los módulos del home. Incluye las claves
+  // fijas ("about", "services", "stack", "security", "projects", "news",
+  // "contact") y, para las personalizadas, "custom:<id>". Cualquier
+  // sección visible que no aparezca aquí se agrega al final.
+  section_order: string[];
 };
+
+// Claves de las secciones fijas (no personalizadas) del home.
+export const BUILTIN_SECTION_KEYS = [
+  "about",
+  "services",
+  "stack",
+  "security",
+  "banner",
+  "projects",
+  "news",
+  "contact",
+] as const;
+export type BuiltinSectionKey = (typeof BUILTIN_SECTION_KEYS)[number];
 
 // Valores por defecto = el contenido actual del portafolio.
 // Si todavía no existe una fila en la base de datos, el home se ve
@@ -141,6 +172,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   default_theme: "light",
   enable_effects: true,
 
+  hero_bg_image_url: "",
+  hero_bg_overlay_opacity: 0.55,
+  page_bg_image_url: "",
+  page_bg_image_opacity: 0.18,
+
   hero_title: "Desarrollador Full Stack",
   hero_subtitle: "🚀 Ciberseguridad & Pentesting Web / API",
   hero_terminal_lines: [
@@ -157,6 +193,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
 
   banner_images: [],
 
+  about_section_title: "Sobre mí",
   about_title: "FullStack Developer",
   about_text:
     "Mi nombre es Jonathan Bustos R. Soy desarrollador Full Stack con experiencia en construcción de aplicaciones web modernas, APIs escalables y despliegues en entornos cloud. Me enfoco en escribir código limpio, seguro y mantenible, integrando buenas prácticas de desarrollo y arquitectura.",
@@ -268,7 +305,10 @@ export const DEFAULT_SETTINGS: SiteSettings = {
 
   footer_text: "Jonathan Bustos · Full Stack · Seguridad Web",
 
+  news_title: "Noticias",
   news: [],
+
+  custom_sections: [],
 
   show_about: true,
   show_services: true,
@@ -284,8 +324,9 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     "services",
     "stack",
     "security",
-    "projects",
+    "banner",
     "news",
+    "projects",
     "contact",
   ],
 };

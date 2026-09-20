@@ -88,6 +88,27 @@ alter table site_settings add column if not exists projects_items jsonb default 
 
 alter table site_settings add column if not exists contact_title text default 'Contacto:';
 
+-- 1.3) Secciones personalizadas: el admin puede agregar tantas secciones
+-- propias como quiera (título + texto libre), además de las secciones
+-- fijas de arriba. Cada una tiene un id único que se referencia desde
+-- section_order como "custom:<id>".
+alter table site_settings add column if not exists custom_sections jsonb default '[]';
+
+-- 1.4) Fondos opcionales adicionales a las partículas. Ambos son
+-- independientes entre sí y de "enable_effects": se puede tener
+-- partículas + imagen de fondo del hero + imagen de fondo de toda la
+-- página, todo a la vez, o ninguno.
+alter table site_settings add column if not exists hero_bg_image_url text default '';
+alter table site_settings add column if not exists hero_bg_overlay_opacity numeric default 0.55;
+alter table site_settings add column if not exists page_bg_image_url text default '';
+alter table site_settings add column if not exists page_bg_image_opacity numeric default 0.18;
+
+-- 1.5) Títulos de sección que antes venían fijos en el código y ahora
+-- son editables desde el panel (parte del pedido de que "cada sección
+-- se pueda renombrar").
+alter table site_settings add column if not exists about_section_title text default 'Sobre mí';
+alter table site_settings add column if not exists news_title text default 'Noticias';
+
 -- Fila inicial (si no existe)
 insert into site_settings (id) values (1)
 on conflict (id) do nothing;

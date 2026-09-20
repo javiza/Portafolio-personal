@@ -59,10 +59,348 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
     services: settings.show_services,
     stack: settings.show_stack,
     security: settings.show_security,
+    banner: settings.show_banner && settings.banner_images.length > 0,
     projects: settings.show_projects,
-    news: settings.show_news,
+    news: settings.show_news && settings.news.length > 0,
     contact: settings.show_contact,
   };
+
+  // Cada sección fija se arma una sola vez acá. El orden real en el home
+  // (más abajo) sale de settings.section_order, no del orden en que estas
+  // constantes quedan escritas.
+  const aboutSection = (
+    <section key="about" className="px-8 py-20 max-w-6xl mx-auto">
+      <h2 className="title-section mb-12 text-center">
+        <strong>{settings.about_section_title}</strong>
+      </h2>
+
+      <div className="grid md:grid-cols-2 gap-10">
+        {/* COLUMNA IZQUIERDA */}
+        <div className="card space-y-6">
+          <h3 className="text-2xl font-semibold">{settings.about_title}</h3>
+
+          <p className="text-foreground/75 leading-relaxed">{settings.about_text}</p>
+
+          {settings.about_highlights && settings.about_highlights.length > 0 && (
+            <div className="space-y-3">
+              {settings.about_highlights.map((highlight, i) => (
+                <div key={i} className="p-4 rounded-xl bg-brand-2/10 border border-brand-2/20">
+                  <p className="text-foreground/85 leading-relaxed whitespace-pre-line">
+                    {highlight}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* HABILIDADES BLANDAS */}
+          {settings.about_soft_skills.length > 0 && (
+            <div>
+              <h4 className="font-semibold mb-2">{settings.about_soft_skills_title}</h4>
+              <ul className="list-disc list-inside text-foreground/75 space-y-1">
+                {settings.about_soft_skills.map((skill, i) => (
+                  <li key={i}>{skill}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* COLUMNA DERECHA */}
+        <div className="card space-y-4">
+          <h4 className="text-xl font-semibold mb-2">{settings.about_stack_title}</h4>
+
+          <div className="space-y-3 text-foreground/75">
+            {settings.about_stack_facts.map((fact, i) => (
+              <p key={i}>
+                <strong>{fact.label}:</strong> {fact.value}
+              </p>
+            ))}
+          </div>
+
+          {/* EXTRA DESTACADO */}
+          {settings.about_focus_text && (
+            <div className="mt-6 p-4 rounded-xl bg-brand-2/10 border border-brand-2/20">
+              <p className="text-sm font-medium text-foreground/85">{settings.about_focus_label}</p>
+              <p className="font-bold text-brand">{settings.about_focus_text}</p>
+            </div>
+          )}
+          {settings.about_social_title && (
+            <h2 className="text-xl font-semibold mb-2">{settings.about_social_title}</h2>
+          )}
+
+          <div className="flex flex-wrap justify-center gap-6">
+            {settings.github_url && (
+              <MotionA
+                enabled={fx}
+                href={settings.github_url}
+                target="_blank"
+                whileHover={{ scale: 1.08 }}
+                className="flex items-center gap-3 px-6 py-3 
+              bg-gray-900 dark:bg-gray-700 text-white 
+              rounded-full shadow-lg"
+              >
+                <SiGit className="text-2xl" /> GitHub
+              </MotionA>
+            )}
+
+            {settings.linkedin_url && (
+              <MotionA
+                enabled={fx}
+                href={settings.linkedin_url}
+                target="_blank"
+                whileHover={{ scale: 1.08 }}
+                className="flex items-center gap-3 px-6 py-3 
+              bg-blue-600 text-white rounded-full shadow-lg"
+              >
+                LinkedIn
+              </MotionA>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  const servicesSection = (
+    <section key="services" className="px-8 py-20 max-w-6xl mx-auto">
+      <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
+      {settings.services_description && (
+        <p className="max-w-2xl mx-auto text-center text-foreground/75 mb-12 whitespace-pre-line">
+          {settings.services_description}
+        </p>
+      )}
+
+      <div className="grid md:grid-cols-3 gap-6">
+        {settings.services_items.map((item, i) => (
+          <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
+            <h3 className="text-xl font-semibold text-brand">{item.title}</h3>
+            <p className="mt-3 text-foreground/85 whitespace-pre-line">{item.description}</p>
+          </MotionDiv>
+        ))}
+      </div>
+
+      {settings.services_cta_label && (
+        <div className="flex justify-center mt-10">
+          <a
+            href={settings.services_cta_href || "#"}
+            className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all"
+          >
+            {settings.services_cta_label}
+          </a>
+        </div>
+      )}
+    </section>
+  );
+
+  const stackSection = (
+    <section key="stack" className="px-8 py-20 max-w-6xl mx-auto">
+      <h2 className="title-section mb-12">{settings.stack_title}</h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {settings.stack_items.map((skill, i) => (
+          <MotionDiv
+            enabled={fx}
+            key={i}
+            whileHover={{ scale: 1.08, rotate: 1 }}
+            className="flex flex-col items-center gap-2 
+bg-card 
+border border-card-border 
+shadow-md hover:shadow-xl hover:-translate-y-1
+transition duration-300 rounded-xl p-4"
+          >
+            <div className="text-4xl text-brand">{getIcon(skill.icon)}</div>
+            <p className="font-semibold text-foreground">{skill.name}</p>
+          </MotionDiv>
+        ))}
+      </div>
+    </section>
+  );
+
+  const securitySection = (
+    <section key="security" className="px-8 pb-20 max-w-6xl mx-auto">
+      <h2 className="title-section mb-12">{settings.security_title}</h2>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        {settings.security_items.map((skill, i) => (
+          <MotionDiv
+            enabled={fx}
+            key={i}
+            whileHover={{ scale: 1.05 }}
+            className="flex flex-col items-center gap-2 
+bg-card 
+border border-card-border 
+shadow-md hover:shadow-xl hover:-translate-y-1
+transition duration-300 rounded-xl p-4"
+          >
+            <div className="text-4xl text-red-500">{getIcon(skill.icon)}</div>
+            <p className="font-semibold text-foreground">{skill.name}</p>
+          </MotionDiv>
+        ))}
+      </div>
+    </section>
+  );
+
+  const bannerSection = (
+    <section key="banner" className="px-8 py-10 max-w-6xl mx-auto">
+      <div className="flex gap-4 overflow-x-auto snap-x pb-4">
+        {settings.banner_images.map((img, i) => (
+          <div
+            key={i}
+            className="relative shrink-0 w-full sm:w-[600px] snap-center rounded-2xl overflow-hidden"
+          >
+            <img src={img.url} alt={img.caption ?? ""} className="w-full h-64 object-cover" />
+            {img.caption && (
+              <p className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
+                {img.caption}
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
+  const newsSection = (
+    <section key="news" className="px-8 py-20 max-w-6xl mx-auto">
+      <h2 className="title-section mb-12">{settings.news_title}</h2>
+      <div className="grid md:grid-cols-2 gap-6">
+        {settings.news.map((n, i) => (
+          <div key={i} className="card">
+            <h3 className="text-xl font-semibold text-brand">{n.title}</h3>
+            {n.date && <p className="text-xs text-foreground/55 mt-1">{n.date}</p>}
+            <p className="mt-3 text-foreground/85">{n.content}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+
+  const projectsSection = (
+    <section key="projects" id="proyectos" className="px-8 py-10">
+      <h2 className="title-section mb-12">{settings.projects_title}</h2>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+        {settings.projects_items.map((project, i) => (
+          <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
+            <h3
+              className="text-2xl font-semibold"
+              style={project.color ? { color: project.color } : undefined}
+            >
+              {project.title}
+            </h3>
+
+            <p className="mt-3 text-foreground/85 whitespace-pre-line">{project.description}</p>
+
+            {project.link && (
+              <Link
+                href={project.link}
+                className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
+              >
+                {project.linkLabel || "Ver Detalles →"}
+              </Link>
+            )}
+          </MotionDiv>
+        ))}
+      </div>
+    </section>
+  );
+
+  const contactSection = (
+    <section key="contact" id="contacto" className="px-8 py-20 max-w-3xl mx-auto">
+      <h2 className="title-section mb-12">{settings.contact_title}</h2>
+      <form
+        className="card flex flex-col gap-4"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          const form = e.target as HTMLFormElement;
+
+          const data = {
+            nombre: form.nombre.value,
+            email: form.email.value,
+            mensaje: form.mensaje.value,
+          };
+
+          const res = await fetch("/api/contacto", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          alert(res.ok ? "Mensaje enviado!" : "Error al enviar.");
+          form.reset();
+        }}
+      >
+        <input
+          name="nombre"
+          placeholder="Tu nombre"
+          required
+          className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Tu correo"
+          required
+          className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
+        />
+        <textarea
+          name="mensaje"
+          rows={5}
+          placeholder="Mensaje..."
+          required
+          className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
+        ></textarea>
+
+        <button className="px-6 py-3 bg-blue-600 text-white rounded-full">Enviar mensaje</button>
+      </form>
+    </section>
+  );
+
+  const builtinSections: Record<string, ReactNode> = {
+    about: aboutSection,
+    services: servicesSection,
+    stack: stackSection,
+    security: securitySection,
+    banner: bannerSection,
+    news: newsSection,
+    projects: projectsSection,
+    contact: contactSection,
+  };
+
+  // Todas las claves fijas visibles, en el orden guardado. Cualquier
+  // clave fija que falte en section_order (sitios viejos que aún no la
+  // tenían guardada) se agrega al final para no perderla del home.
+  const orderedKeys = [...settings.section_order];
+  for (const key of Object.keys(builtinSections)) {
+    if (!orderedKeys.includes(key)) orderedKeys.push(key);
+  }
+  for (const custom of settings.custom_sections) {
+    const key = `custom:${custom.id}`;
+    if (!orderedKeys.includes(key)) orderedKeys.push(key);
+  }
+
+  const renderedSections = orderedKeys.map((key) => {
+    if (key.startsWith("custom:")) {
+      const id = key.slice("custom:".length);
+      const custom = settings.custom_sections.find((c) => c.id === id);
+      if (!custom) return null;
+      return (
+        <section key={key} className="px-8 py-20 max-w-6xl mx-auto">
+          <h2 className="title-section mb-8 text-center">{custom.title}</h2>
+          <div className="card whitespace-pre-line text-foreground/85 leading-relaxed">
+            {custom.content}
+          </div>
+        </section>
+      );
+    }
+
+    if (sectionVisible[key] === false) return null;
+    return builtinSections[key] ?? null;
+  });
+
+  const hasPageBg = Boolean(settings.page_bg_image_url);
+  const hasHeroBg = Boolean(settings.hero_bg_image_url);
 
   return (
     // El color de fondo real ahora se fija por request en layout.tsx
@@ -70,7 +408,20 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
     // que es de donde globals.css lo toma para pintar <body>. Poner un
     // --background aquí no hacía nada porque main es descendiente de
     // body, no al revés.
-    <main className="min-h-screen bg-background text-foreground transition-colors duration-300">
+    <main className="min-h-screen bg-background text-foreground transition-colors duration-300 relative">
+      {/* FONDO DE PÁGINA COMPLETA (opcional, independiente de las partículas) */}
+      {hasPageBg && (
+        <div
+          aria-hidden
+          className="fixed inset-0 pointer-events-none bg-cover bg-center bg-fixed"
+          style={{
+            backgroundImage: `url(${settings.page_bg_image_url})`,
+            opacity: settings.page_bg_image_opacity,
+            zIndex: -2,
+          }}
+        />
+      )}
+
       {fx && <BackgroundParticles />}
 
       {/* BOTÓN DE TEMA */}
@@ -85,430 +436,115 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {theme === "light" ? "🌙" : "✨"}
       </button>
 
-
       {/* HERO */}
-      <section className="flex flex-col items-center text-center pt-24 px-6 gap-4">
-      <MotionDiv
-        enabled={fx}
-        key={resolvedTheme} // 🔥 esto fuerza animación al cambiar tema
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-      >
-  <Image
-    src={resolvedTheme === "dark" ? settings.logo_light_url : settings.logo_dark_url}
-    alt="Logo"
-    width={500}
-    height={300}
-    priority
-  />
-</MotionDiv>
-
-
-
-  {/* TITULO PRINCIPAL */}
-  <h2
-    className="text-4xl sm:text-5xl lg:text-6xl font-extrabold max-w-3xl"
-    style={{ color: settings.primary_color }}
-  >
-    {settings.hero_title}
-  </h2>
-
-  {/* LINEA MODERNA */}
-<div
-  className="w-24 sm:w-40 md:w-56 lg:w-72 h-1 rounded-full mx-auto"
-  style={{ backgroundColor: settings.primary_color }}
-></div>
-  {/* ESPECIALIZACIÓN */}
-  {settings.hero_subtitle && (
-    <p className="text-lg sm:text-xl font-bold text-foreground">
-      {settings.hero_subtitle}
-    </p>
-  )}
-
-  {/* TERMINAL EFFECT */}
-  {settings.hero_terminal_lines.length > 0 && (
-    <MotionDiv
-      enabled={fx}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1 }}
-      className="mt-4 space-y-1"
-    >
-      {settings.hero_terminal_lines.map((line, i) => (
-        <p key={i} className="font-mono text-green-500">
-          {line}
-        </p>
-      ))}
-    </MotionDiv>
-  )}
-
-  {/* BOTONES */}
-  <div className="flex gap-4 mt-6 flex-wrap justify-center">
-    {settings.hero_button_primary_label && (
-      <a
-        href={settings.hero_button_primary_href || "#"}
-        className="px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:scale-105 transition"
-      >
-        {settings.hero_button_primary_label}
-      </a>
-    )}
-
-    {settings.hero_button_secondary_label && (
-      <a
-        href={settings.hero_button_secondary_href || "#"}
-        className="px-6 py-3 border border-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition"
-      >
-        {settings.hero_button_secondary_label}
-      </a>
-    )}
-  </div>
-
-</section>
-{/* SOBRE MI PRO */}
-{sectionVisible.about && (
-<section className="px-8 py-20 max-w-6xl mx-auto">
-  <h2 className="title-section mb-12 text-center">
-    <strong>Sobre mí</strong>
-  </h2>
-
-  <div className="grid md:grid-cols-2 gap-10">
-
-    {/* COLUMNA IZQUIERDA */}
-    <div className="card space-y-6">
-      <h3 className="text-2xl font-semibold">
-        {settings.about_title}
-      </h3>
-
-      <p className="text-foreground/75 leading-relaxed">
-        {settings.about_text}
-      </p>
-
-      {settings.about_highlights && settings.about_highlights.length > 0 && (
-        <div className="space-y-3">
-          {settings.about_highlights.map((highlight, i) => (
+      <section className="relative flex flex-col items-center text-center pt-24 px-6 gap-4 overflow-hidden">
+        {hasHeroBg && (
+          <>
             <div
-              key={i}
-              className="p-4 rounded-xl bg-brand-2/10 border border-brand-2/20"
-            >
-              <p className="text-foreground/85 leading-relaxed whitespace-pre-line">
-                {highlight}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* HABILIDADES BLANDAS */}
-      {settings.about_soft_skills.length > 0 && (
-        <div>
-          <h4 className="font-semibold mb-2">{settings.about_soft_skills_title}</h4>
-          <ul className="list-disc list-inside text-foreground/75 space-y-1">
-            {settings.about_soft_skills.map((skill, i) => (
-              <li key={i}>{skill}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-
-    {/* COLUMNA DERECHA */}
-    <div className="card space-y-4">
-      <h4 className="text-xl font-semibold mb-2">
-        {settings.about_stack_title}
-      </h4>
-
-      <div className="space-y-3 text-foreground/75">
-        {settings.about_stack_facts.map((fact, i) => (
-          <p key={i}><strong>{fact.label}:</strong> {fact.value}</p>
-        ))}
-      </div>
-
-      {/* EXTRA DESTACADO */}
-      {settings.about_focus_text && (
-        <div className="mt-6 p-4 rounded-xl bg-brand-2/10 border border-brand-2/20">
-          <p className="text-sm font-medium text-foreground/85">
-            {settings.about_focus_label}
-          </p>
-          <p className="font-bold text-brand">
-            {settings.about_focus_text}
-          </p>
-        </div>
-      )}
-      {settings.about_social_title && (
-        <h2 className="text-xl font-semibold mb-2">{settings.about_social_title}</h2>
-      )}
-
-        <div className="flex flex-wrap justify-center gap-6">
-          {settings.github_url && (
-            <MotionA
-              enabled={fx}
-              href={settings.github_url}
-              target="_blank"
-              whileHover={{ scale: 1.08 }}
-              className="flex items-center gap-3 px-6 py-3 
-              bg-gray-900 dark:bg-gray-700 text-white 
-              rounded-full shadow-lg"
-            >
-              <SiGit className="text-2xl" /> GitHub
-            </MotionA>
-          )}
-
-          {settings.linkedin_url && (
-            <MotionA
-              enabled={fx}
-              href={settings.linkedin_url}
-              target="_blank"
-              whileHover={{ scale: 1.08 }}
-              className="flex items-center gap-3 px-6 py-3 
-              bg-blue-600 text-white rounded-full shadow-lg"
-            >
-              LinkedIn
-            </MotionA>
-          )}
-        </div>
-    </div>
-
-  </div>
-</section>
-)}
-
-{sectionVisible.services && (
-     <section className="px-8 py-20 max-w-6xl mx-auto">
-       <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
-       {settings.services_description && (
-         <p className="max-w-2xl mx-auto text-center text-foreground/75 mb-12 whitespace-pre-line">
-           {settings.services_description}
-         </p>
-       )}
-
-       <div className="grid md:grid-cols-3 gap-6">
-         {settings.services_items.map((item, i) => (
-           <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
-             <h3 className="text-xl font-semibold text-brand">
-               {item.title}
-             </h3>
-             <p className="mt-3 text-foreground/85 whitespace-pre-line">
-               {item.description}
-             </p>
-           </MotionDiv>
-         ))}
-       </div>
-
-       {settings.services_cta_label && (
-         <div className="flex justify-center mt-10">
-           <a
-             href={settings.services_cta_href || "#"}
-             className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-full shadow-lg hover:scale-105 transition-all"
-           >
-             {settings.services_cta_label}
-           </a>
-         </div>
-       )}
-     </section>
-)}
-
-     {/* HABILIDADES FULLSTACK */}
-{sectionVisible.stack && (
-<section className="px-8 py-20 max-w-6xl mx-auto">
-  <h2 className="title-section mb-12">{settings.stack_title}</h2>
-
-  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-    {settings.stack_items.map((skill, i) => (
-      <MotionDiv
-        enabled={fx}
-        key={i}
-        whileHover={{ scale: 1.08, rotate: 1 }}
-        className="flex flex-col items-center gap-2 
-bg-card 
-border border-card-border 
-shadow-md hover:shadow-xl hover:-translate-y-1
-transition duration-300 rounded-xl p-4"
-      >
-        <div className="text-4xl text-brand">
-          {getIcon(skill.icon)}
-        </div>
-
-        <p className="font-semibold text-foreground">
-          {skill.name}
-        </p>
-      </MotionDiv>
-    ))}
-  </div>
-</section>
-)}
-
-      {/* HABILIDADES CIBERSEGURIDAD */}
-      {sectionVisible.security && (
-      <section className="px-8 pb-20 max-w-6xl mx-auto">
-        <h2 className="title-section mb-12">{settings.security_title}</h2>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {settings.security_items.map((skill, i) => (
-            <MotionDiv
-              enabled={fx}
-              key={i}
-              whileHover={{ scale: 1.05 }}
-className="flex flex-col items-center gap-2 
-bg-card 
-border border-card-border 
-shadow-md hover:shadow-xl hover:-translate-y-1
-transition duration-300 rounded-xl p-4"            >
-              <div className="text-4xl text-red-500">{getIcon(skill.icon)}</div>
-
-              <p className="font-semibold text-foreground">
-                {skill.name}
-              </p>
-            </MotionDiv>
-          ))}
-        </div>
-      </section>
-      )}
-
-      {/* BANNER / SLIDER */}
-      {settings.show_banner && settings.banner_images.length > 0 && (
-        <section className="px-8 py-10 max-w-6xl mx-auto">
-          <div className="flex gap-4 overflow-x-auto snap-x pb-4">
-            {settings.banner_images.map((img, i) => (
-              <div key={i} className="relative shrink-0 w-full sm:w-[600px] snap-center rounded-2xl overflow-hidden">
-                <img src={img.url} alt={img.caption ?? ""} className="w-full h-64 object-cover" />
-                {img.caption && (
-                  <p className="absolute bottom-0 left-0 right-0 bg-black/50 text-white text-center py-2">
-                    {img.caption}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* NOTICIAS */}
-      {settings.show_news && settings.news.length > 0 && (
-        <section className="px-8 py-20 max-w-6xl mx-auto">
-          <h2 className="title-section mb-12">Noticias</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {settings.news.map((n, i) => (
-              <div key={i} className="card">
-                <h3 className="text-xl font-semibold text-brand">
-                  {n.title}
-                </h3>
-                {n.date && (
-                  <p className="text-xs text-foreground/55 mt-1">{n.date}</p>
-                )}
-                <p className="mt-3 text-foreground/85">{n.content}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* PROYECTOS */}
-      {sectionVisible.projects && (
-      <section id="proyectos" className="px-8 py-10">
-        <h2 className="title-section mb-12">{settings.projects_title}</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-          {settings.projects_items.map((project, i) => (
-            <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
-              <h3
-                className="text-2xl font-semibold"
-                style={project.color ? { color: project.color } : undefined}
-              >
-                {project.title}
-              </h3>
-
-              <p className="mt-3 text-foreground/85 whitespace-pre-line">
-                {project.description}
-              </p>
-
-              {project.link && (
-                <Link
-                  href={project.link}
-                  className="mt-5 inline-block px-5 py-2 bg-blue-600 text-white rounded-full"
-                >
-                  {project.linkLabel || "Ver Detalles →"}
-                </Link>
-              )}
-            </MotionDiv>
-          ))}
-        </div>
-      </section>
-      )}
-
-      {/* CONTACTO */}
-      {sectionVisible.contact && (
-      <section id="contacto" className="px-8 py-20 max-w-3xl mx-auto">
-        <h2 className="title-section mb-12">{settings.contact_title}</h2>
-        <form
-          className="card flex flex-col gap-4"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const form = e.target as HTMLFormElement;
-
-            const data = {
-              nombre: form.nombre.value,
-              email: form.email.value,
-              mensaje: form.mensaje.value,
-            };
-
-            const res = await fetch("/api/contacto", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data),
-            });
-
-            alert(res.ok ? "Mensaje enviado!" : "Error al enviar.");
-            form.reset();
-          }}
+              aria-hidden
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${settings.hero_bg_image_url})`, zIndex: -1 }}
+            />
+            <div
+              aria-hidden
+              className="absolute inset-0 bg-black"
+              style={{ opacity: settings.hero_bg_overlay_opacity, zIndex: -1 }}
+            />
+          </>
+        )}
+        <MotionDiv
+          enabled={fx}
+          key={resolvedTheme} // 🔥 esto fuerza animación al cambiar tema
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
         >
-          <input
-            name="nombre"
-            placeholder="Tu nombre"
-            required
-            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
+          <Image
+            src={resolvedTheme === "dark" ? settings.logo_light_url : settings.logo_dark_url}
+            alt="Logo"
+            width={500}
+            height={300}
+            priority
           />
-          <input
-            name="email"
-            type="email"
-            placeholder="Tu correo"
-            required
-            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
-          />
-          <textarea
-            name="mensaje"
-            rows={5}
-            placeholder="Mensaje..."
-            required
-            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
-          ></textarea>
+        </MotionDiv>
 
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-full">
-            Enviar mensaje
-          </button>
-        </form>
+        {/* TITULO PRINCIPAL */}
+        <h2
+          className="text-4xl sm:text-5xl lg:text-6xl font-extrabold max-w-3xl"
+          style={{ color: settings.primary_color }}
+        >
+          {settings.hero_title}
+        </h2>
+
+        {/* LINEA MODERNA */}
+        <div
+          className="w-24 sm:w-40 md:w-56 lg:w-72 h-1 rounded-full mx-auto"
+          style={{ backgroundColor: settings.primary_color }}
+        ></div>
+        {/* ESPECIALIZACIÓN */}
+        {settings.hero_subtitle && (
+          <p className="text-lg sm:text-xl font-bold text-foreground">{settings.hero_subtitle}</p>
+        )}
+
+        {/* TERMINAL EFFECT */}
+        {settings.hero_terminal_lines.length > 0 && (
+          <MotionDiv
+            enabled={fx}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="mt-4 space-y-1"
+          >
+            {settings.hero_terminal_lines.map((line, i) => (
+              <p key={i} className="font-mono text-green-500">
+                {line}
+              </p>
+            ))}
+          </MotionDiv>
+        )}
+
+        {/* BOTONES */}
+        <div className="flex gap-4 mt-6 flex-wrap justify-center">
+          {settings.hero_button_primary_label && (
+            <a
+              href={settings.hero_button_primary_href || "#"}
+              className="px-6 py-3 bg-purple-600 text-white rounded-full shadow-lg hover:scale-105 transition"
+            >
+              {settings.hero_button_primary_label}
+            </a>
+          )}
+
+          {settings.hero_button_secondary_label && (
+            <a
+              href={settings.hero_button_secondary_href || "#"}
+              className="px-6 py-3 border border-purple-500 rounded-full hover:bg-purple-500 hover:text-white transition"
+            >
+              {settings.hero_button_secondary_label}
+            </a>
+          )}
+        </div>
       </section>
-      )}
 
-   {/* FOOTER */}
-<footer className="mt-20 w-full bg-gray-900 text-white py-6 px-6">
-  <div className="max-w-6xl mx-auto relative flex items-center justify-center">
+      {/* SECCIONES / MÓDULOS: orden y contenido 100% definidos desde el panel admin */}
+      {renderedSections}
 
-    {/* TEXTO CENTRADO */}
-    <p className="text-sm text-foreground/45 text-center">
-      © {new Date().getFullYear()} {settings.footer_text}
-    </p>
+      {/* FOOTER */}
+      <footer className="mt-20 w-full bg-gray-900 text-white py-6 px-6">
+        <div className="max-w-6xl mx-auto relative flex items-center justify-center">
+          {/* TEXTO CENTRADO */}
+          <p className="text-sm text-foreground/45 text-center">
+            © {new Date().getFullYear()} {settings.footer_text}
+          </p>
 
-    {/* BOTÓN A LA DERECHA */}
-    <button
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="absolute right-0 bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg transition"
-    >
-      ↑
-    </button>
-
-  </div>
-</footer>
+          {/* BOTÓN A LA DERECHA */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="absolute right-0 bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg transition"
+          >
+            ↑
+          </button>
+        </div>
+      </footer>
     </main>
   );
 }

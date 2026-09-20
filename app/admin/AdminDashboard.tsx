@@ -21,9 +21,17 @@ import {
   FaCheckCircle,
   FaExclamationCircle,
   FaTrash,
+  FaImage,
+  FaPlus,
+  FaEyeSlash,
 } from "react-icons/fa";
 import { createClient } from "../../lib/supabase/client";
-import { DEFAULT_SETTINGS, type SiteSettings } from "../../types/settings";
+import {
+  DEFAULT_SETTINGS,
+  BUILTIN_SECTION_KEYS,
+  type SiteSettings,
+  type BuiltinSectionKey,
+} from "../../types/settings";
 import PreviewOverlay from "./PreviewOverlay";
 import {
   inputClass,
@@ -36,18 +44,48 @@ import {
   ProjectItemsEditor,
 } from "./editors";
 
-const SECTION_LABELS: Record<string, string> = {
+// Etiqueta fija de cada sección incorporada, solo para identificarla en el
+// panel (el NOMBRE que ve el visitante ahora es 100% editable por sección,
+// ver *_title / *_section_title más abajo).
+const SECTION_LABELS: Record<BuiltinSectionKey, string> = {
   about: "Sobre mí",
   services: "Servicios",
   stack: "Stack de Desarrollo",
   security: "Ciberseguridad",
+  banner: "Banner / Slider",
   projects: "Proyectos",
   news: "Noticias",
   contact: "Contacto",
 };
 
+// Para cada sección incorporada: en qué campo de settings vive su título
+// visible, y qué flag controla si se muestra en el home. Así el tab
+// "Secciones y orden" puede mostrar/editar/ocultar cualquier sección sin
+// tener que saber sus detalles internos.
+const SECTION_TITLE_FIELD: Partial<Record<BuiltinSectionKey, keyof SiteSettings>> = {
+  about: "about_section_title",
+  services: "services_title",
+  stack: "stack_title",
+  security: "security_title",
+  projects: "projects_title",
+  news: "news_title",
+  contact: "contact_title",
+};
+
+const SECTION_VISIBILITY_FIELD: Record<BuiltinSectionKey, keyof SiteSettings> = {
+  about: "show_about",
+  services: "show_services",
+  stack: "show_stack",
+  security: "show_security",
+  banner: "show_banner",
+  projects: "show_projects",
+  news: "show_news",
+  contact: "show_contact",
+};
+
 const TABS = [
   { key: "identity", label: "Identidad y diseño", icon: <FaPalette /> },
+  { key: "backgrounds", label: "Fondos y efectos", icon: <FaImage /> },
   { key: "hero", label: "Portada (Hero)", icon: <FaHome /> },
   { key: "about", label: "Sobre mí", icon: <FaUserAlt /> },
   { key: "services", label: "Servicios", icon: <FaBriefcase /> },
@@ -57,7 +95,7 @@ const TABS = [
   { key: "banner", label: "Banner / Slider", icon: <FaImages /> },
   { key: "news", label: "Noticias", icon: <FaNewspaper /> },
   { key: "contact", label: "Contacto y Footer", icon: <FaEnvelope /> },
-  { key: "order", label: "Orden de secciones", icon: <FaListOl /> },
+  { key: "order", label: "Secciones y orden", icon: <FaListOl /> },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -141,12 +179,62 @@ export default function AdminDashboard({
     router.refresh();
   }
 
+  // section_order puede quedar desactualizado si el sitio se creó antes de
+  // que existieran los módulos nuevos (banner, secciones personalizadas).
+  // Este arreglo siempre tiene TODAS las claves, en el orden guardado y
+  // con lo que falte agregado al final, para que el panel muestre y
+  // reordene absolutamente todo.
+  const fullOrder = [...settings.section_order];
+  for (const key of BUILTIN_SECTION_KEYS) {
+    if (!fullOrder.includes(key)) fullOrder.push(key);
+  }
+  for (const custom of settings.custom_sections) {
+    const key = `custom:${custom.id}`;
+    if (!fullOrder.includes(key)) fullOrder.push(key);
+  }
+
   function moveSection(index: number, dir: -1 | 1) {
-    const order = [...settings.section_order];
+    const order = [...fullOrder];
     const newIndex = index + dir;
     if (newIndex < 0 || newIndex >= order.length) return;
     [order[index], order[newIndex]] = [order[newIndex], order[index]];
     set("section_order", order);
+  }
+
+  function addCustomSection() {
+    const id = `sec-${Date.now().toString(36)}`;
+    setSettings((prev) => ({
+      ...prev,
+      custom_sections: [
+        ...prev.custom_sections,
+        { id, title: "Nueva sección", content: "" },
+      ],
+      section_order: [...prev.section_order, `custom:${id}`],
+    }));
+  }
+
+  function renameCustomSection(id: string, title: string) {
+    setSettings((prev) => ({
+      ...prev,
+      custom_sections: prev.custom_sections.map((c) => (c.id === id ? { ...c, title } : c)),
+    }));
+  }
+
+  function updateCustomSectionContent(id: string, content: string) {
+    setSettings((prev) => ({
+      ...prev,
+      custom_sections: prev.custom_sections.map((c) => (c.id === id ? { ...c, content } : c)),
+    }));
+  }
+
+  function deleteCustomSection(id: string) {
+    const confirmed = window.confirm("¿Eliminar esta sección? Esta acción no se puede deshacer.");
+    if (!confirmed) return;
+    setSettings((prev) => ({
+      ...prev,
+      custom_sections: prev.custom_sections.filter((c) => c.id !== id),
+      section_order: prev.section_order.filter((k) => k !== `custom:${id}`),
+    }));
   }
 
   return (
@@ -449,6 +537,141 @@ export default function AdminDashboard({
             </>
           )}
 
+          {activeTab === "backgrounds" && (
+            <>
+              <section className="card space-y-4">
+                <h2 className="text-xl font-bold">✨ Partículas animadas</h2>
+                <label className="flex items-center gap-3 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={settings.enable_effects}
+                    onChange={(e) => set("enable_effects", e.target.checked)}
+                    className="w-4 h-4"
+                  />
+                  Activar partículas de fondo + animaciones
+                </label>
+                <p className="text-xs text-gray-500">
+                  Este efecto es independiente de las imágenes de fondo de abajo: puedes
+                  combinarlos, usar solo uno, o apagarlos todos.
+                </p>
+              </section>
+
+              <section className="card space-y-4">
+                <h2 className="text-xl font-bold">🖼️ Imagen de fondo del inicio (Hero)</h2>
+                <p className="text-sm text-gray-500">
+                  Opcional. Se muestra solo detrás de la portada, con una capa oscura
+                  encima para que el título se siga leyendo bien.
+                </p>
+                {settings.hero_bg_image_url && (
+                  <img
+                    src={settings.hero_bg_image_url}
+                    alt="Fondo del inicio"
+                    className="w-full max-w-md h-40 object-cover rounded-xl"
+                  />
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploading === "hero_bg"}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const url = await uploadImage(file, "hero_bg");
+                    if (url) set("hero_bg_image_url", url);
+                    e.target.value = "";
+                  }}
+                />
+                {uploading === "hero_bg" && <p className="text-sm">Subiendo...</p>}
+                <FieldRow label="...o pega una URL de imagen">
+                  <input
+                    value={settings.hero_bg_image_url}
+                    onChange={(e) => set("hero_bg_image_url", e.target.value)}
+                    placeholder="https://ejemplo.com/fondo-inicio.jpg"
+                    className={inputClass}
+                  />
+                </FieldRow>
+                {settings.hero_bg_image_url && (
+                  <>
+                    <FieldRow label={`Oscurecer la imagen (${Math.round(settings.hero_bg_overlay_opacity * 100)}%)`}>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={settings.hero_bg_overlay_opacity}
+                        onChange={(e) => set("hero_bg_overlay_opacity", Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </FieldRow>
+                    <button
+                      onClick={() => set("hero_bg_image_url", "")}
+                      className="text-red-500 text-sm flex items-center gap-1"
+                    >
+                      <FaTrash size={11} /> Quitar imagen de fondo del inicio
+                    </button>
+                  </>
+                )}
+              </section>
+
+              <section className="card space-y-4">
+                <h2 className="text-xl font-bold">🌄 Imagen de fondo de toda la página</h2>
+                <p className="text-sm text-gray-500">
+                  Opcional. Queda fija detrás de todo el sitio mientras se hace scroll,
+                  por encima del color de fondo y por debajo del contenido.
+                </p>
+                {settings.page_bg_image_url && (
+                  <img
+                    src={settings.page_bg_image_url}
+                    alt="Fondo de la página"
+                    className="w-full max-w-md h-40 object-cover rounded-xl"
+                  />
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={uploading === "page_bg"}
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const url = await uploadImage(file, "page_bg");
+                    if (url) set("page_bg_image_url", url);
+                    e.target.value = "";
+                  }}
+                />
+                {uploading === "page_bg" && <p className="text-sm">Subiendo...</p>}
+                <FieldRow label="...o pega una URL de imagen">
+                  <input
+                    value={settings.page_bg_image_url}
+                    onChange={(e) => set("page_bg_image_url", e.target.value)}
+                    placeholder="https://ejemplo.com/fondo-pagina.jpg"
+                    className={inputClass}
+                  />
+                </FieldRow>
+                {settings.page_bg_image_url && (
+                  <>
+                    <FieldRow label={`Visibilidad de la imagen (${Math.round(settings.page_bg_image_opacity * 100)}%)`}>
+                      <input
+                        type="range"
+                        min={0}
+                        max={1}
+                        step={0.05}
+                        value={settings.page_bg_image_opacity}
+                        onChange={(e) => set("page_bg_image_opacity", Number(e.target.value))}
+                        className="w-full"
+                      />
+                    </FieldRow>
+                    <button
+                      onClick={() => set("page_bg_image_url", "")}
+                      className="text-red-500 text-sm flex items-center gap-1"
+                    >
+                      <FaTrash size={11} /> Quitar imagen de fondo de la página
+                    </button>
+                  </>
+                )}
+              </section>
+            </>
+          )}
+
           {activeTab === "hero" && (
             <section className="card space-y-4">
               <h2 className="text-xl font-bold">🏠 Portada (Hero)</h2>
@@ -521,6 +744,14 @@ export default function AdminDashboard({
                 />
                 Mostrar sección &quot;Sobre mí&quot;
               </label>
+
+              <FieldRow label="Nombre de la sección (como aparece en el home)">
+                <input
+                  value={settings.about_section_title}
+                  onChange={(e) => set("about_section_title", e.target.value)}
+                  className={inputClass}
+                />
+              </FieldRow>
 
               <FieldRow label="Título (ej: FullStack Developer)">
                 <input
@@ -832,6 +1063,14 @@ export default function AdminDashboard({
                 Mostrar sección de noticias
               </label>
 
+              <FieldRow label="Nombre de la sección (como aparece en el home)">
+                <input
+                  value={settings.news_title}
+                  onChange={(e) => set("news_title", e.target.value)}
+                  className={inputClass}
+                />
+              </FieldRow>
+
               {settings.news.map((n, i) => (
                 <div key={i} className="border border-gray-200 dark:border-purple-700/40 p-3 rounded-xl space-y-2">
                   <input
@@ -919,47 +1158,140 @@ export default function AdminDashboard({
           )}
 
           {activeTab === "order" && (
-            <section className="card space-y-3">
-              <h2 className="text-xl font-bold">📑 Orden de las secciones del Home</h2>
+            <section className="card space-y-4">
+              <h2 className="text-xl font-bold">📑 Secciones y orden del Home</h2>
               <p className="text-sm text-gray-500">
-                Usa las flechas para cambiar el orden en que aparecen en la página. La
-                visibilidad de cada sección se controla en su propia pestaña.
+                Acá está TODO lo que puede aparecer en el home: cambia el orden con las
+                flechas, edita el nombre de cualquier sección, muéstrala/ocúltala, o
+                elimínala por completo. También puedes agregar secciones nuevas con
+                cualquier nombre y contenido, como la de &quot;Ciberseguridad&quot;
+                pero totalmente a tu gusto.
               </p>
               <div className="space-y-2">
-                {settings.section_order.map((key, i) => (
-                  <div
-                    key={key}
-                    className="flex items-center gap-3 border border-gray-200 dark:border-purple-700/40 rounded-lg px-3 py-2"
-                  >
-                    <button
-                      onClick={() => moveSection(i, -1)}
-                      className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
-                      disabled={i === 0}
+                {fullOrder.map((key, i) => {
+                  const isCustom = key.startsWith("custom:");
+                  const customId = isCustom ? key.slice("custom:".length) : null;
+                  const custom = customId
+                    ? settings.custom_sections.find((c) => c.id === customId)
+                    : null;
+
+                  if (isCustom && !custom) return null;
+
+                  const builtinKey = isCustom ? null : (key as BuiltinSectionKey);
+                  const titleField = builtinKey ? SECTION_TITLE_FIELD[builtinKey] : undefined;
+                  const visibilityField = builtinKey
+                    ? SECTION_VISIBILITY_FIELD[builtinKey]
+                    : undefined;
+                  const isVisible = isCustom
+                    ? true
+                    : Boolean(settings[visibilityField as keyof SiteSettings]);
+
+                  return (
+                    <div
+                      key={key}
+                      className="flex flex-wrap items-center gap-3 border border-gray-200 dark:border-purple-700/40 rounded-lg px-3 py-2"
                     >
-                      ↑
-                    </button>
-                    <button
-                      onClick={() => moveSection(i, 1)}
-                      className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
-                      disabled={i === settings.section_order.length - 1}
-                    >
-                      ↓
-                    </button>
-                    <span className="flex-1 font-medium">{SECTION_LABELS[key]}</span>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        settings[(`show_${key}` as unknown) as keyof SiteSettings]
-                          ? "bg-green-500/15 text-green-600 dark:text-green-400"
-                          : "bg-gray-400/15 text-gray-500"
-                      }`}
-                    >
-                      {settings[(`show_${key}` as unknown) as keyof SiteSettings]
-                        ? "Visible"
-                        : "Oculta"}
-                    </span>
-                  </div>
-                ))}
+                      <div className="flex gap-1 shrink-0">
+                        <button
+                          onClick={() => moveSection(i, -1)}
+                          className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
+                          disabled={i === 0}
+                          aria-label="Mover arriba"
+                        >
+                          ↑
+                        </button>
+                        <button
+                          onClick={() => moveSection(i, 1)}
+                          className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
+                          disabled={i === fullOrder.length - 1}
+                          aria-label="Mover abajo"
+                        >
+                          ↓
+                        </button>
+                      </div>
+
+                      {isCustom && custom ? (
+                        <input
+                          value={custom.title}
+                          onChange={(e) => renameCustomSection(custom.id, e.target.value)}
+                          className={inputClass + " flex-1 min-w-[10rem]"}
+                          placeholder="Nombre de la sección"
+                        />
+                      ) : titleField ? (
+                        <input
+                          value={String(settings[titleField])}
+                          onChange={(e) => set(titleField, e.target.value as never)}
+                          className={inputClass + " flex-1 min-w-[10rem]"}
+                          placeholder="Nombre de la sección"
+                        />
+                      ) : (
+                        <span className="flex-1 min-w-[10rem] font-medium">
+                          {SECTION_LABELS[builtinKey as BuiltinSectionKey]}
+                        </span>
+                      )}
+
+                      {!isCustom && (
+                        <button
+                          onClick={() =>
+                            set(
+                              visibilityField as keyof SiteSettings,
+                              !isVisible as never
+                            )
+                          }
+                          className={`shrink-0 flex items-center gap-2 text-xs px-3 py-1.5 rounded-full transition ${
+                            isVisible
+                              ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                              : "bg-gray-400/15 text-gray-500"
+                          }`}
+                        >
+                          {isVisible ? <FaEye size={11} /> : <FaEyeSlash size={11} />}
+                          {isVisible ? "Visible" : "Oculta"}
+                        </button>
+                      )}
+
+                      {isCustom && custom && (
+                        <button
+                          onClick={() => deleteCustomSection(custom.id)}
+                          className="shrink-0 flex items-center gap-2 text-xs px-3 py-1.5 rounded-full border border-red-300 text-red-500 hover:bg-red-500 hover:text-white transition"
+                        >
+                          <FaTrash size={11} /> Eliminar
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+
+              {/* Contenido de las secciones personalizadas */}
+              {settings.custom_sections.length > 0 && (
+                <div className="space-y-3 pt-2">
+                  <h3 className="font-semibold text-sm">Contenido de tus secciones personalizadas</h3>
+                  {settings.custom_sections.map((c) => (
+                    <div
+                      key={c.id}
+                      className="border border-gray-200 dark:border-purple-700/40 rounded-xl p-3 space-y-2 bg-gray-50/60 dark:bg-white/[0.03]"
+                    >
+                      <p className="text-xs text-gray-500">
+                        Sección: <span className="font-medium">{c.title}</span>
+                      </p>
+                      <textarea
+                        value={c.content}
+                        onChange={(e) => updateCustomSectionContent(c.id, e.target.value)}
+                        rows={3}
+                        placeholder="Texto que se muestra en esta sección"
+                        className={inputClass}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={addCustomSection}
+                className="flex items-center gap-2 text-sm px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium transition"
+              >
+                <FaPlus size={11} /> Agregar sección nueva
+              </button>
             </section>
           )}
 
