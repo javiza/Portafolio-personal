@@ -116,6 +116,14 @@ export default function AdminDashboard({
         ? { text: `Error al guardar: ${error.message}`, ok: false }
         : { text: "Cambios guardados correctamente", ok: true }
     );
+
+    // Sin esto, el home público seguía mostrando la config vieja hasta
+    // el próximo deploy (ver export const dynamic = "force-dynamic" en
+    // layout.tsx / page.tsx). router.refresh() vuelve a pedir el RSC
+    // payload del layout raíz, que ahora sí se recalcula por request.
+    if (!error) {
+      router.refresh();
+    }
   }
 
   function handleRestore() {

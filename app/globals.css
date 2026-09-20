@@ -1,25 +1,49 @@
 @import "tailwindcss";
 
+/* Tailwind v4 ya no lee tailwind.config.js: sin este @custom-variant,
+   dark: respondía al tema del sistema operativo, no a la clase .dark
+   que pone next-themes en <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Conecta las variables CSS (que layout.tsx llena por request con los
+   valores guardados en Supabase) con utilidades reales de Tailwind:
+   bg-background, text-foreground, bg-brand, text-brand-2, font-sans. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand-primary);
+  --color-brand-2: var(--brand-secondary);
+  --font-sans: var(--font-site), system-ui, sans-serif;
+}
+
 /* ------------------------------
-   TEMA CLARO
+   TEMA CLARO (valores por defecto de build;
+   layout.tsx los sobreescribe por request)
 ------------------------------ */
 :root {
   --background: #f5f7fa;
   --foreground: #0f0f0f;
+  --brand-primary: #2563eb;
+  --brand-secondary: #9333ea;
 
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
 }
+
 html {
   scroll-behavior: smooth;
 }
+
 /* ------------------------------
    TEMA OSCURO "GALAXY PRO"
+   El color que el admin elige para "Fondo oscuro" entra como la
+   primera parada del degradado (ver layout.tsx), así se puede
+   personalizar sin perder el efecto de tres capas.
 ------------------------------ */
 .dark {
   --background: radial-gradient(
       circle at 20% 20%,
-      #1b103d 0%,
+      var(--background-dark-base, #1b103d) 0%,
       #0b0722 40%,
       #03020d 100%
   );
@@ -39,10 +63,6 @@ body {
   background-attachment: fixed;
   color: var(--foreground);
   transition: background 0.4s ease, color 0.4s ease;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 /* ------------------------------

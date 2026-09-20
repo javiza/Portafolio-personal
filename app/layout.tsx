@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Inter, Poppins, Roboto } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { createClient } from "../lib/supabase/server";
 import { DEFAULT_SETTINGS, type SiteSettings } from "../types/settings";
+
+// El home lee configuración desde Supabase (cookies()), así que Next lo
+// trataba como dinámico solo mientras nada atrapara ese error interno.
+// El try/catch de getSettings() se lo comía, y la página quedaba
+// congelada como estática desde el build (initialRevalidateSeconds:
+// false). Esto fuerza el render en cada request para todo el sitio.
+export const dynamic = "force-dynamic";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,6 +21,29 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Las 4 opciones del selector de tipografía del panel admin. next/font
+// exige que las fuentes se declaren de forma estática (no se puede
+// llamar Poppins({...}) dentro de una condición), así que se cargan
+// las cuatro y se elige cuál queda activa vía variable CSS --font-site.
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const poppins = Poppins({
+  variable: "--font-poppins",
+  subsets: ["latin"],
+  weight: ["400", "600", "800"],
+});
+const roboto = Roboto({
+  variable: "--font-roboto",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
+const FONT_VAR: Record<SiteSettings["font_family"], string> = {
+  geist: "var(--font-geist-sans)",
+  inter: "var(--font-inter)",
+  poppins: "var(--font-poppins)",
+  roboto: "var(--font-roboto)",
+};
 
 const SITE_URL = "https://portafolio-personal-dnar.vercel.app";
 
@@ -141,10 +171,31 @@ const jsonLd = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings();
 
+  // Colores y tipografía guardados en Supabase, aplicados como variables
+  // CSS en :root para que globals.css (vía @theme inline) los convierta
+  // en utilidades reales: bg-background, text-brand, font-sans, etc.
+  // Van en un <style> del <head> (no en un atributo style de <main>)
+  // porque body, que es quien pinta el fondo, es ancestro del contenido,
+  // no descendiente.
+  const cssVars = `
+    :root {
+      --background: ${settings.background_light};
+      --brand-primary: ${settings.primary_color};
+      --brand-secondary: ${settings.secondary_color};
+      --font-site: ${FONT_VAR[settings.font_family] ?? FONT_VAR.geist};
+    }
+    .dark {
+      --background-dark-base: ${settings.background_dark};
+    }
+  `;
+
   return (
     <html lang="es" suppressHydrationWarning>
+      <head>
+        <style dangerouslySetInnerHTML={{ __html: cssVars }} />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${poppins.variable} ${roboto.variable} antialiased`}
       >
         <script
           type="application/ld+json"

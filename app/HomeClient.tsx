@@ -65,14 +65,12 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
   };
 
   return (
-    <main
-      className="min-h-screen bg-background text-foreground transition-colors duration-300"
-      style={
-        {
-          "--background": resolvedTheme === "dark" ? settings.background_dark : settings.background_light,
-        } as React.CSSProperties
-      }
-    >
+    // El color de fondo real ahora se fija por request en layout.tsx
+    // (variables --background y --background-dark-base en :root/.dark),
+    // que es de donde globals.css lo toma para pintar <body>. Poner un
+    // --background aquí no hacía nada porque main es descendiente de
+    // body, no al revés.
+    <main className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {fx && <BackgroundParticles />}
 
       {/* BOTÓN DE TEMA */}
@@ -127,7 +125,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
 ></div>
   {/* ESPECIALIZACIÓN */}
   {settings.hero_subtitle && (
-    <p className="text-lg sm:text-xl font-bold text-white-600 dark:text-dark-300">
+    <p className="text-lg sm:text-xl font-bold text-gray-800 dark:text-purple-200">
       {settings.hero_subtitle}
     </p>
   )}
@@ -186,7 +184,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_title}
       </h3>
 
-      <p className="text-gray-600 dark:text-dark-300 leading-relaxed">
+      <p className="text-gray-600 dark:text-purple-200 leading-relaxed">
         {settings.about_text}
       </p>
 
@@ -197,7 +195,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
               key={i}
               className="p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20"
             >
-              <p className="text-gray-700 dark:text-dark-300 leading-relaxed whitespace-pre-line">
+              <p className="text-gray-700 dark:text-purple-200 leading-relaxed whitespace-pre-line">
                 {highlight}
               </p>
             </div>
@@ -209,7 +207,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
       {settings.about_soft_skills.length > 0 && (
         <div>
           <h4 className="font-semibold mb-2">{settings.about_soft_skills_title}</h4>
-          <ul className="list-disc list-inside text-gray-600 dark:text-dark-300 space-y-1">
+          <ul className="list-disc list-inside text-gray-600 dark:text-purple-200 space-y-1">
             {settings.about_soft_skills.map((skill, i) => (
               <li key={i}>{skill}</li>
             ))}
@@ -224,7 +222,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_stack_title}
       </h4>
 
-      <div className="space-y-3 text-gray-600 dark:text-dark-300">
+      <div className="space-y-3 text-gray-600 dark:text-purple-200">
         {settings.about_stack_facts.map((fact, i) => (
           <p key={i}><strong>{fact.label}:</strong> {fact.value}</p>
         ))}
@@ -233,10 +231,10 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
       {/* EXTRA DESTACADO */}
       {settings.about_focus_text && (
         <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20">
-          <p className="text-sm font-medium text-gray-700 dark:text-dark-300">
+          <p className="text-sm font-medium text-gray-700 dark:text-purple-200">
             {settings.about_focus_label}
           </p>
-          <p className="font-bold text-blue-600 dark:text-dark-300">
+          <p className="font-bold text-blue-600 dark:text-purple-200">
             {settings.about_focus_text}
           </p>
         </div>
@@ -283,7 +281,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
      <section className="px-8 py-20 max-w-6xl mx-auto">
        <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
        {settings.services_description && (
-         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-dark-300 mb-12 whitespace-pre-line">
+         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-purple-200 mb-12 whitespace-pre-line">
            {settings.services_description}
          </p>
        )}
@@ -294,7 +292,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
              <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
                {item.title}
              </h3>
-             <p className="mt-3 text-gray-700 dark:text-dark-300 whitespace-pre-line">
+             <p className="mt-3 text-gray-700 dark:text-purple-200 whitespace-pre-line">
                {item.description}
              </p>
            </MotionDiv>
@@ -402,7 +400,7 @@ transition duration-300 rounded-xl p-4"            >
                 {n.date && (
                   <p className="text-xs text-gray-500 mt-1">{n.date}</p>
                 )}
-                <p className="mt-3 text-gray-700 dark:text-dark-300">{n.content}</p>
+                <p className="mt-3 text-gray-700 dark:text-purple-200">{n.content}</p>
               </div>
             ))}
           </div>
@@ -424,7 +422,7 @@ transition duration-300 rounded-xl p-4"            >
                 {project.title}
               </h3>
 
-              <p className="mt-3 text-gray-700 dark:text-dark-300 whitespace-pre-line">
+              <p className="mt-3 text-gray-700 dark:text-purple-200 whitespace-pre-line">
                 {project.description}
               </p>
 
