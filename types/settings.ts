@@ -76,6 +76,9 @@ export type SiteSettings = {
   hero_button_secondary_href: string;
   logo_light_url: string;
   logo_dark_url: string;
+  // Ancho del logo en píxeles (el alto se ajusta solo para no deformarlo).
+  // Antes el logo se dibujaba siempre a 500px y no se podía cambiar.
+  logo_width: number;
 
   // Banner / Slider (imágenes con texto opcional)
   banner_images: { url: string; caption?: string }[];
@@ -121,6 +124,8 @@ export type SiteSettings = {
 
   // Footer
   footer_text: string;
+  footer_bg_color: string; // color de fondo del footer (antes fijo en gris oscuro)
+  footer_text_color: string; // color del texto del footer (antes fijo, casi invisible)
 
   // Noticias / novedades (opcional, se muestran si hay al menos una)
   news_title: string; // título de la sección completa (antes venía fijo como "Noticias")
@@ -215,6 +220,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   hero_button_secondary_href: "#contacto",
   logo_light_url: "/logo-light.png",
   logo_dark_url: "/logo-dark.png",
+  logo_width: 280,
 
   banner_images: [],
 
@@ -329,6 +335,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   linkedin_url: "https://linkedin.com/in/jonathan-bustos-r",
 
   footer_text: "Jonathan Bustos · Full Stack · Seguridad Web",
+  footer_bg_color: "#111827",
+  footer_text_color: "#e5e7eb",
 
   news_title: "Noticias",
   news: [],

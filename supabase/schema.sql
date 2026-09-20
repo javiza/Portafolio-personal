@@ -139,6 +139,13 @@ alter table site_settings add column if not exists hero_terminal_text_color text
 -- mismas que se usan en section_order ("about", "custom:<id>", etc.).
 alter table site_settings add column if not exists section_align jsonb default '{}';
 
+-- 1.9) Tamaño del logo (ancho en px) y colores del footer (fondo y texto).
+-- Antes el logo se dibujaba siempre a 500px y el footer tenía el color
+-- fijo en el código.
+alter table site_settings add column if not exists logo_width integer default 280;
+alter table site_settings add column if not exists footer_bg_color text default '#111827';
+alter table site_settings add column if not exists footer_text_color text default '#e5e7eb';
+
 -- Fila inicial (si no existe)
 insert into site_settings (id) values (1)
 on conflict (id) do nothing;

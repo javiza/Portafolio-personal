@@ -2,13 +2,12 @@
 
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence, type HTMLMotionProps } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { SiGit } from "react-icons/si";
 
 import BackgroundParticles from "./components/BackgroundParticles";
-import type { SiteSettings } from "../types/settings";
+import { DEFAULT_SETTINGS, type SiteSettings } from "../types/settings";
 import { getIcon } from "../lib/icons";
 
 // Cuando enable_effects está apagado, estos wrappers renderizan un <div>/<a>
@@ -656,7 +655,7 @@ transition duration-300 rounded-xl p-4"
     // que es de donde globals.css lo toma para pintar <body>. Poner un
     // --background aquí no hacía nada porque main es descendiente de
     // body, no al revés.
-    <main className="min-h-screen bg-background text-foreground transition-colors duration-300 relative">
+    <main className="min-h-screen bg-background text-foreground transition-colors duration-300 relative isolate">
       {/* FONDO DE PÁGINA COMPLETA (opcional, independiente de las partículas) */}
       {hasPageBg && (
         <div
@@ -685,7 +684,7 @@ transition duration-300 rounded-xl p-4"
       </button>
 
       {/* HERO */}
-      <section className="relative flex flex-col items-center text-center pt-24 px-6 gap-4 overflow-hidden">
+      <section className="relative isolate flex flex-col items-center text-center pt-24 px-6 gap-4 overflow-hidden">
         {hasHeroBg && (
           <>
             <div
@@ -707,12 +706,19 @@ transition duration-300 rounded-xl p-4"
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
         >
-          <Image
+          {/* Tamaño editable desde el panel (logo_width, en px). El alto es
+              automático para no deformar la imagen, y max-width evita que
+              se salga de la pantalla en móvil. <img> plano (no next/image)
+              para que también funcionen URLs pegadas de cualquier dominio. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={resolvedTheme === "dark" ? settings.logo_light_url : settings.logo_dark_url}
             alt="Logo"
-            width={500}
-            height={300}
-            priority
+            style={{
+              width: `${settings.logo_width || DEFAULT_SETTINGS.logo_width}px`,
+              maxWidth: "100%",
+              height: "auto",
+            }}
           />
         </MotionDiv>
 
@@ -779,17 +785,23 @@ transition duration-300 rounded-xl p-4"
       {renderedSections}
 
       {/* FOOTER */}
-      <footer className="mt-20 w-full bg-gray-900 text-white py-6 px-6">
+      <footer
+        className="mt-20 w-full py-6 px-6"
+        style={{
+          backgroundColor: settings.footer_bg_color,
+          color: settings.footer_text_color,
+        }}
+      >
         <div className="max-w-6xl mx-auto relative flex items-center justify-center">
           {/* TEXTO CENTRADO */}
-          <p className="text-sm text-foreground/45 text-center">
+          <p className="text-sm text-center">
             © {new Date().getFullYear()} {settings.footer_text}
           </p>
 
           {/* BOTÓN A LA DERECHA */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="absolute right-0 bg-blue-600 hover:bg-blue-700 p-3 rounded-full shadow-lg transition"
+            className="absolute right-0 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition"
           >
             ↑
           </button>

@@ -566,6 +566,28 @@ export default function AdminDashboard({
                   oscuro (si solo tienes una, puedes repetir la misma URL en ambas).
                 </p>
 
+                <FieldRow label={`Tamaño del logo (${settings.logo_width}px de ancho)`}>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min={60}
+                      max={600}
+                      step={10}
+                      value={settings.logo_width}
+                      onChange={(e) => set("logo_width", Number(e.target.value))}
+                      className="w-full"
+                    />
+                    <input
+                      type="number"
+                      min={20}
+                      max={1000}
+                      value={settings.logo_width}
+                      onChange={(e) => set("logo_width", Number(e.target.value) || 0)}
+                      className={inputClass + " w-24"}
+                    />
+                  </div>
+                </FieldRow>
+
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <p className="font-semibold text-sm">Logo para modo claro</p>
@@ -573,7 +595,8 @@ export default function AdminDashboard({
                       <img
                         src={settings.logo_dark_url}
                         alt="Logo modo claro"
-                        className="h-16 object-contain bg-white rounded p-2"
+                        style={{ width: `${Math.min(settings.logo_width, 260)}px`, height: "auto" }}
+                        className="max-w-full bg-white rounded p-2"
                       />
                     )}
                     <input
@@ -605,7 +628,8 @@ export default function AdminDashboard({
                       <img
                         src={settings.logo_light_url}
                         alt="Logo modo oscuro"
-                        className="h-16 object-contain bg-gray-900 rounded p-2"
+                        style={{ width: `${Math.min(settings.logo_width, 260)}px`, height: "auto" }}
+                        className="max-w-full bg-gray-900 rounded p-2"
                       />
                     )}
                     <input
@@ -1261,6 +1285,35 @@ export default function AdminDashboard({
                     className={inputClass}
                   />
                 </FieldRow>
+                <div className="flex flex-wrap items-end gap-6">
+                  <label className="flex flex-col items-center gap-2 text-sm">
+                    Color de fondo
+                    <input
+                      type="color"
+                      value={settings.footer_bg_color}
+                      onChange={(e) => set("footer_bg_color", e.target.value)}
+                      className="w-16 h-10 cursor-pointer"
+                    />
+                  </label>
+                  <label className="flex flex-col items-center gap-2 text-sm">
+                    Color del texto
+                    <input
+                      type="color"
+                      value={settings.footer_text_color}
+                      onChange={(e) => set("footer_text_color", e.target.value)}
+                      className="w-16 h-10 cursor-pointer"
+                    />
+                  </label>
+                  <div
+                    className="px-5 py-3 text-sm rounded-lg"
+                    style={{
+                      backgroundColor: settings.footer_bg_color,
+                      color: settings.footer_text_color,
+                    }}
+                  >
+                    © {new Date().getFullYear()} {settings.footer_text}
+                  </div>
+                </div>
               </section>
             </>
           )}
