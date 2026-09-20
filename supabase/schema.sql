@@ -38,7 +38,21 @@ create table if not exists site_settings (
 );
 
 -- 1.1) Migración: columnas nuevas del panel "control total del home".
--- Cada línea es segura de re-ejecutar (IF NOT EXISTS).
+-- Cada línea es segura de re-ejecutar (IF NOT EXISTS). También cubre
+-- columnas que ya estaban en el CREATE TABLE de arriba: si tu tabla se
+-- creó con una versión más vieja de este script (antes de que existieran),
+-- "create table if not exists" no las agrega retroactivamente, así que
+-- quedan reforzadas acá también.
+alter table site_settings add column if not exists show_about boolean default true;
+alter table site_settings add column if not exists show_services boolean default true;
+alter table site_settings add column if not exists show_stack boolean default true;
+alter table site_settings add column if not exists show_security boolean default true;
+alter table site_settings add column if not exists show_projects boolean default true;
+alter table site_settings add column if not exists show_news boolean default false;
+alter table site_settings add column if not exists show_banner boolean default false;
+alter table site_settings add column if not exists show_contact boolean default true;
+alter table site_settings add column if not exists section_order jsonb default '["about","services","stack","security","banner","news","projects","contact"]';
+
 alter table site_settings add column if not exists favicon_url text default '/favicon.ico';
 alter table site_settings add column if not exists browser_tab_title text default 'Jonathan Bustos | Desarrollador Full Stack & Pentester Web';
 
@@ -108,6 +122,22 @@ alter table site_settings add column if not exists page_bg_image_opacity numeric
 -- se pueda renombrar").
 alter table site_settings add column if not exists about_section_title text default 'Sobre mí';
 alter table site_settings add column if not exists news_title text default 'Noticias';
+
+-- 1.6) Botones: antes cada botón del sitio tenía su color pegado en el
+-- código (azul, morado, negro...) y no eran editables. Ahora TODOS los
+-- botones "sólidos" del sitio comparten estas 3 columnas.
+alter table site_settings add column if not exists button_bg_color text default '#2563eb';
+alter table site_settings add column if not exists button_text_color text default '#ffffff';
+alter table site_settings add column if not exists button_shape text default 'full';
+
+-- 1.7) Color del texto del efecto terminal del hero (antes venía fijo
+-- en verde y no se podía editar desde el panel).
+alter table site_settings add column if not exists hero_terminal_text_color text default '#22c55e';
+
+-- 1.8) Alineación de cada sección del home (izquierda / centro /
+-- derecha), independiente del orden. Las claves del jsonb son las
+-- mismas que se usan en section_order ("about", "custom:<id>", etc.).
+alter table site_settings add column if not exists section_align jsonb default '{}';
 
 -- Fila inicial (si no existe)
 insert into site_settings (id) values (1)

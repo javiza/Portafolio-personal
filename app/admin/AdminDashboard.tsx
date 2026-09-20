@@ -175,7 +175,7 @@ export default function AdminDashboard({
 
   async function handleLogout() {
     await supabase.auth.signOut();
-    router.push("/login/admin");
+    router.push("/");
     router.refresh();
   }
 
@@ -199,6 +199,26 @@ export default function AdminDashboard({
     if (newIndex < 0 || newIndex >= order.length) return;
     [order[index], order[newIndex]] = [order[newIndex], order[index]];
     set("section_order", order);
+  }
+
+  // Mueve una sección directamente al principio o al final, sin tener
+  // que ir flecha por flecha (útil para reordenar de abajo hacia arriba
+  // o viceversa de una sola vez).
+  function moveSectionToEdge(index: number, edge: "top" | "bottom") {
+    const order = [...fullOrder];
+    const [item] = order.splice(index, 1);
+    if (edge === "top") order.unshift(item);
+    else order.push(item);
+    set("section_order", order);
+  }
+
+  // Alineación de una sección dentro de la página: centrada (por
+  // defecto), o "imantada" a la izquierda o a la derecha.
+  function setSectionAlign(key: string, align: "left" | "center" | "right") {
+    setSettings((prev) => ({
+      ...prev,
+      section_align: { ...prev.section_align, [key]: align },
+    }));
   }
 
   function addCustomSection() {
@@ -431,6 +451,84 @@ export default function AdminDashboard({
                   <option value="poppins">Poppins</option>
                   <option value="roboto">Roboto</option>
                 </select>
+              </section>
+
+              <section className="card space-y-4">
+                <h2 className="text-xl font-bold">🔘 Botones</h2>
+                <p className="text-sm text-foreground/60">
+                  Estos colores y esta forma se aplican a TODOS los botones del sitio:
+                  portada, servicios, redes sociales, proyectos y el formulario de
+                  contacto.
+                </p>
+                <div className="flex flex-wrap gap-6">
+                  <label className="flex flex-col items-center gap-2 text-sm">
+                    Color de fondo
+                    <input
+                      type="color"
+                      value={settings.button_bg_color}
+                      onChange={(e) => set("button_bg_color", e.target.value)}
+                      className="w-16 h-10 cursor-pointer"
+                    />
+                  </label>
+                  <label className="flex flex-col items-center gap-2 text-sm">
+                    Color del texto
+                    <input
+                      type="color"
+                      value={settings.button_text_color}
+                      onChange={(e) => set("button_text_color", e.target.value)}
+                      className="w-16 h-10 cursor-pointer"
+                    />
+                  </label>
+                  <div className="flex flex-col gap-2 text-sm">
+                    Forma
+                    <div className="flex gap-2">
+                      {(
+                        [
+                          ["full", "Redondeado"],
+                          ["rounded", "Suave"],
+                          ["square", "Cuadrado"],
+                        ] as const
+                      ).map(([value, label]) => (
+                        <button
+                          key={value}
+                          type="button"
+                          onClick={() => set("button_shape", value)}
+                          className={`px-4 py-2 text-xs border transition ${
+                            settings.button_shape === value
+                              ? "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-300"
+                              : "border-gray-300 dark:border-purple-700/50 text-gray-500"
+                          } ${
+                            value === "full"
+                              ? "rounded-full"
+                              : value === "rounded"
+                              ? "rounded-xl"
+                              : "rounded-none"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <label className="flex flex-col items-center gap-2 text-sm">
+                    Vista previa
+                    <span
+                      className="px-5 py-2 text-sm"
+                      style={{
+                        backgroundColor: settings.button_bg_color,
+                        color: settings.button_text_color,
+                        borderRadius:
+                          settings.button_shape === "full"
+                            ? "9999px"
+                            : settings.button_shape === "rounded"
+                            ? "1rem"
+                            : "0.25rem",
+                      }}
+                    >
+                      Botón
+                    </span>
+                  </label>
+                </div>
               </section>
 
               <section className="card space-y-4">
@@ -698,6 +796,16 @@ export default function AdminDashboard({
                   addLabel="Agregar línea"
                 />
               </FieldRow>
+
+              <label className="flex items-center gap-3 text-sm">
+                Color del texto de la terminal
+                <input
+                  type="color"
+                  value={settings.hero_terminal_text_color}
+                  onChange={(e) => set("hero_terminal_text_color", e.target.value)}
+                  className="w-16 h-10 cursor-pointer"
+                />
+              </label>
 
               <div className="grid sm:grid-cols-2 gap-6 pt-2">
                 <div className="space-y-3">
@@ -1162,10 +1270,11 @@ export default function AdminDashboard({
               <h2 className="text-xl font-bold">📑 Secciones y orden del Home</h2>
               <p className="text-sm text-gray-500">
                 Acá está TODO lo que puede aparecer en el home: cambia el orden con las
-                flechas, edita el nombre de cualquier sección, muéstrala/ocúltala, o
-                elimínala por completo. También puedes agregar secciones nuevas con
-                cualquier nombre y contenido, como la de &quot;Ciberseguridad&quot;
-                pero totalmente a tu gusto.
+                flechas (o muévela directo al principio/final), elige si va alineada a
+                la izquierda, al centro o a la derecha de la página, edita el nombre de
+                cualquier sección, muéstrala/ocúltala, o elimínala por completo. También
+                puedes agregar secciones nuevas con cualquier nombre y contenido, como
+                la de &quot;Ciberseguridad&quot; pero totalmente a tu gusto.
               </p>
               <div className="space-y-2">
                 {fullOrder.map((key, i) => {
@@ -1185,6 +1294,7 @@ export default function AdminDashboard({
                   const isVisible = isCustom
                     ? true
                     : Boolean(settings[visibilityField as keyof SiteSettings]);
+                  const currentAlign = settings.section_align?.[key] ?? "center";
 
                   return (
                     <div
@@ -1192,6 +1302,15 @@ export default function AdminDashboard({
                       className="flex flex-wrap items-center gap-3 border border-gray-200 dark:border-purple-700/40 rounded-lg px-3 py-2"
                     >
                       <div className="flex gap-1 shrink-0">
+                        <button
+                          onClick={() => moveSectionToEdge(i, "top")}
+                          className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
+                          disabled={i === 0}
+                          aria-label="Mover al principio"
+                          title="Mover al principio"
+                        >
+                          ⇈
+                        </button>
                         <button
                           onClick={() => moveSection(i, -1)}
                           className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
@@ -1207,6 +1326,15 @@ export default function AdminDashboard({
                           aria-label="Mover abajo"
                         >
                           ↓
+                        </button>
+                        <button
+                          onClick={() => moveSectionToEdge(i, "bottom")}
+                          className="px-2 py-1 rounded border border-gray-300 dark:border-purple-700/50 text-sm disabled:opacity-30"
+                          disabled={i === fullOrder.length - 1}
+                          aria-label="Mover al final"
+                          title="Mover al final"
+                        >
+                          ⇊
                         </button>
                       </div>
 
@@ -1229,6 +1357,36 @@ export default function AdminDashboard({
                           {SECTION_LABELS[builtinKey as BuiltinSectionKey]}
                         </span>
                       )}
+
+                      <div className="flex gap-1 shrink-0" role="group" aria-label="Alineación">
+                        {(
+                          [
+                            ["left", "⬅"],
+                            ["center", "•"],
+                            ["right", "➡"],
+                          ] as const
+                        ).map(([value, icon]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            onClick={() => setSectionAlign(key, value)}
+                            title={
+                              value === "left"
+                                ? "Alinear a la izquierda"
+                                : value === "right"
+                                ? "Alinear a la derecha"
+                                : "Centrar"
+                            }
+                            className={`px-2 py-1 rounded border text-sm transition ${
+                              currentAlign === value
+                                ? "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-300"
+                                : "border-gray-300 dark:border-purple-700/50 text-gray-500"
+                            }`}
+                          >
+                            {icon}
+                          </button>
+                        ))}
+                      </div>
 
                       {!isCustom && (
                         <button
