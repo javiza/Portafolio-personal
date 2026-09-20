@@ -42,6 +42,15 @@ create table if not exists site_settings (
 alter table site_settings add column if not exists favicon_url text default '/favicon.ico';
 alter table site_settings add column if not exists browser_tab_title text default 'Jonathan Bustos | Desarrollador Full Stack & Pentester Web';
 
+-- 1.2) Fondo de tarjetas/módulos y color de texto, por tema. Antes
+-- estaban fijos en el CSS (blanco/morado y negro/lila), sin poder
+-- editarse desde el panel; ahora son independientes del color de
+-- fondo de la página para que no se confundan entre sí.
+alter table site_settings add column if not exists card_bg_light text default '#ffffff';
+alter table site_settings add column if not exists card_bg_dark text default '#171233';
+alter table site_settings add column if not exists text_color_light text default '#0f0f0f';
+alter table site_settings add column if not exists text_color_dark text default '#f0eaff';
+
 alter table site_settings add column if not exists default_theme text default 'light';
 alter table site_settings add column if not exists enable_effects boolean default true;
 

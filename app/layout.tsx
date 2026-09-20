@@ -171,21 +171,29 @@ const jsonLd = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings();
 
-  // Colores y tipografía guardados en Supabase, aplicados como variables
-  // CSS en :root para que globals.css (vía @theme inline) los convierta
-  // en utilidades reales: bg-background, text-brand, font-sans, etc.
+  // Colores, tipografía y color de texto guardados en Supabase,
+  // aplicados como variables CSS en :root/.dark para que globals.css
+  // (vía @theme inline) los convierta en utilidades reales:
+  // bg-background, text-foreground, bg-card, bg-brand, font-sans.
   // Van en un <style> del <head> (no en un atributo style de <main>)
-  // porque body, que es quien pinta el fondo, es ancestro del contenido,
-  // no descendiente.
+  // porque body, que es quien pinta el fondo, es ancestro del
+  // contenido, no descendiente.
+  // Todo es color plano: sin degradados. El fondo de las tarjetas
+  // (--card-bg) es un color propio, independiente del fondo de
+  // página, así nunca se confunden entre sí.
   const cssVars = `
     :root {
       --background: ${settings.background_light};
+      --foreground: ${settings.text_color_light};
       --brand-primary: ${settings.primary_color};
       --brand-secondary: ${settings.secondary_color};
+      --card-bg: ${settings.card_bg_light};
       --font-site: ${FONT_VAR[settings.font_family] ?? FONT_VAR.geist};
     }
     .dark {
-      --background-dark-base: ${settings.background_dark};
+      --background: ${settings.background_dark};
+      --foreground: ${settings.text_color_dark};
+      --card-bg: ${settings.card_bg_dark};
     }
   `;
 

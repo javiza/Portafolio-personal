@@ -20,6 +20,17 @@ export type SiteSettings = {
   background_light: string;
   background_dark: string;
 
+  // Fondo de las tarjetas/módulos, independiente del fondo de página.
+  // Antes era un color fijo en el CSS; al elegir cualquier fondo de
+  // página se podía confundir con el de las tarjetas.
+  card_bg_light: string;
+  card_bg_dark: string;
+
+  // Color del texto (tipografía), por tema. Antes estaba fijo en el
+  // CSS y no era editable desde el panel.
+  text_color_light: string;
+  text_color_dark: string;
+
   // Tipografía
   font_family: "geist" | "inter" | "poppins" | "roboto";
 
@@ -117,7 +128,13 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   primary_color: "#2563eb",
   secondary_color: "#9333ea",
   background_light: "#f5f7fa",
-  background_dark: "#0b0722",
+  background_dark: "#0b0722", // ahora es un color plano, sin degradado
+
+  card_bg_light: "#ffffff",
+  card_bg_dark: "#171233", // un poco más claro que el fondo oscuro, para que se distinga
+
+  text_color_light: "#0f0f0f",
+  text_color_dark: "#f0eaff",
 
   font_family: "geist",
 

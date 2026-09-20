@@ -299,6 +299,12 @@ export default function AdminDashboard({
 
               <section className="card space-y-4">
                 <h2 className="text-xl font-bold">🎨 Colores</h2>
+                <p className="text-sm text-foreground/60">
+                  &quot;Fondo&quot; es el color de la página. &quot;Tarjetas&quot; es el
+                  color de los recuadros/módulos que van encima (stack,
+                  seguridad, servicios). Usa uno claramente distinto al
+                  fondo de su mismo tema para que no se confundan.
+                </p>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {(
                     [
@@ -306,6 +312,10 @@ export default function AdminDashboard({
                       ["secondary_color", "Secundario"],
                       ["background_light", "Fondo claro"],
                       ["background_dark", "Fondo oscuro"],
+                      ["card_bg_light", "Tarjetas (claro)"],
+                      ["card_bg_dark", "Tarjetas (oscuro)"],
+                      ["text_color_light", "Texto (claro)"],
+                      ["text_color_dark", "Texto (oscuro)"],
                     ] as const
                   ).map(([key, label]) => (
                     <label key={key} className="flex flex-col items-center gap-2 text-sm">

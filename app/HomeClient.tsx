@@ -77,9 +77,9 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
       <button
         onClick={() => setTheme(theme === "light" ? "dark" : "light")}
         className="fixed top-5 right-5 p-3 rounded-full shadow-lg 
-        bg-white dark:bg-[#160b34]
-        border border-gray-300 dark:border-purple-700
-        text-gray-900 dark:text-purple-200
+        bg-card
+        border border-card-border
+        text-foreground
         hover:scale-110 transition-all z-50"
       >
         {theme === "light" ? "🌙" : "✨"}
@@ -108,10 +108,8 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
 
   {/* TITULO PRINCIPAL */}
   <h2
-    className="text-4xl sm:text-5xl lg:text-6xl font-extrabold max-w-3xl text-transparent bg-clip-text"
-    style={{
-      backgroundImage: `linear-gradient(to right, ${settings.primary_color}, ${settings.secondary_color})`,
-    }}
+    className="text-4xl sm:text-5xl lg:text-6xl font-extrabold max-w-3xl"
+    style={{ color: settings.primary_color }}
   >
     {settings.hero_title}
   </h2>
@@ -119,13 +117,11 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
   {/* LINEA MODERNA */}
 <div
   className="w-24 sm:w-40 md:w-56 lg:w-72 h-1 rounded-full mx-auto"
-  style={{
-    backgroundImage: `linear-gradient(to right, ${settings.primary_color}, ${settings.secondary_color})`,
-  }}
+  style={{ backgroundColor: settings.primary_color }}
 ></div>
   {/* ESPECIALIZACIÓN */}
   {settings.hero_subtitle && (
-    <p className="text-lg sm:text-xl font-bold text-gray-800 dark:text-purple-200">
+    <p className="text-lg sm:text-xl font-bold text-foreground">
       {settings.hero_subtitle}
     </p>
   )}
@@ -184,7 +180,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_title}
       </h3>
 
-      <p className="text-gray-600 dark:text-purple-200 leading-relaxed">
+      <p className="text-foreground/75 leading-relaxed">
         {settings.about_text}
       </p>
 
@@ -193,9 +189,9 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
           {settings.about_highlights.map((highlight, i) => (
             <div
               key={i}
-              className="p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20"
+              className="p-4 rounded-xl bg-brand-2/10 border border-brand-2/20"
             >
-              <p className="text-gray-700 dark:text-purple-200 leading-relaxed whitespace-pre-line">
+              <p className="text-foreground/85 leading-relaxed whitespace-pre-line">
                 {highlight}
               </p>
             </div>
@@ -207,7 +203,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
       {settings.about_soft_skills.length > 0 && (
         <div>
           <h4 className="font-semibold mb-2">{settings.about_soft_skills_title}</h4>
-          <ul className="list-disc list-inside text-gray-600 dark:text-purple-200 space-y-1">
+          <ul className="list-disc list-inside text-foreground/75 space-y-1">
             {settings.about_soft_skills.map((skill, i) => (
               <li key={i}>{skill}</li>
             ))}
@@ -222,7 +218,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         {settings.about_stack_title}
       </h4>
 
-      <div className="space-y-3 text-gray-600 dark:text-purple-200">
+      <div className="space-y-3 text-foreground/75">
         {settings.about_stack_facts.map((fact, i) => (
           <p key={i}><strong>{fact.label}:</strong> {fact.value}</p>
         ))}
@@ -230,11 +226,11 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
 
       {/* EXTRA DESTACADO */}
       {settings.about_focus_text && (
-        <div className="mt-6 p-4 rounded-xl bg-gradient-to-r from-blue-600/10 to-purple-500/10 border border-purple-500/20">
-          <p className="text-sm font-medium text-gray-700 dark:text-purple-200">
+        <div className="mt-6 p-4 rounded-xl bg-brand-2/10 border border-brand-2/20">
+          <p className="text-sm font-medium text-foreground/85">
             {settings.about_focus_label}
           </p>
-          <p className="font-bold text-blue-600 dark:text-purple-200">
+          <p className="font-bold text-brand">
             {settings.about_focus_text}
           </p>
         </div>
@@ -281,7 +277,7 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
      <section className="px-8 py-20 max-w-6xl mx-auto">
        <h2 className="title-section mb-4 text-center">{settings.services_title}</h2>
        {settings.services_description && (
-         <p className="max-w-2xl mx-auto text-center text-gray-600 dark:text-purple-200 mb-12 whitespace-pre-line">
+         <p className="max-w-2xl mx-auto text-center text-foreground/75 mb-12 whitespace-pre-line">
            {settings.services_description}
          </p>
        )}
@@ -289,10 +285,10 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
        <div className="grid md:grid-cols-3 gap-6">
          {settings.services_items.map((item, i) => (
            <MotionDiv enabled={fx} key={i} whileHover={{ scale: 1.04 }} className="card">
-             <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+             <h3 className="text-xl font-semibold text-brand">
                {item.title}
              </h3>
-             <p className="mt-3 text-gray-700 dark:text-purple-200 whitespace-pre-line">
+             <p className="mt-3 text-foreground/85 whitespace-pre-line">
                {item.description}
              </p>
            </MotionDiv>
@@ -324,16 +320,16 @@ export default function HomeClient({ settings }: { settings: SiteSettings }) {
         key={i}
         whileHover={{ scale: 1.08, rotate: 1 }}
         className="flex flex-col items-center gap-2 
-bg-white dark:bg-[#160b34] 
-border border-gray-200 dark:border-purple-700 
+bg-card 
+border border-card-border 
 shadow-md hover:shadow-xl hover:-translate-y-1
 transition duration-300 rounded-xl p-4"
       >
-        <div className="text-4xl text-blue-600 dark:text-purple-300">
+        <div className="text-4xl text-brand">
           {getIcon(skill.icon)}
         </div>
 
-        <p className="font-semibold text-gray-800 dark:text-purple-200">
+        <p className="font-semibold text-foreground">
           {skill.name}
         </p>
       </MotionDiv>
@@ -354,13 +350,13 @@ transition duration-300 rounded-xl p-4"
               key={i}
               whileHover={{ scale: 1.05 }}
 className="flex flex-col items-center gap-2 
-bg-white dark:bg-[#160b34] 
-border border-gray-200 dark:border-purple-700 
+bg-card 
+border border-card-border 
 shadow-md hover:shadow-xl hover:-translate-y-1
 transition duration-300 rounded-xl p-4"            >
               <div className="text-4xl text-red-500">{getIcon(skill.icon)}</div>
 
-              <p className="font-semibold text-gray-800 dark:text-gray-200">
+              <p className="font-semibold text-foreground">
                 {skill.name}
               </p>
             </MotionDiv>
@@ -394,13 +390,13 @@ transition duration-300 rounded-xl p-4"            >
           <div className="grid md:grid-cols-2 gap-6">
             {settings.news.map((n, i) => (
               <div key={i} className="card">
-                <h3 className="text-xl font-semibold text-blue-600 dark:text-purple-300">
+                <h3 className="text-xl font-semibold text-brand">
                   {n.title}
                 </h3>
                 {n.date && (
-                  <p className="text-xs text-gray-500 mt-1">{n.date}</p>
+                  <p className="text-xs text-foreground/55 mt-1">{n.date}</p>
                 )}
-                <p className="mt-3 text-gray-700 dark:text-purple-200">{n.content}</p>
+                <p className="mt-3 text-foreground/85">{n.content}</p>
               </div>
             ))}
           </div>
@@ -422,7 +418,7 @@ transition duration-300 rounded-xl p-4"            >
                 {project.title}
               </h3>
 
-              <p className="mt-3 text-gray-700 dark:text-purple-200 whitespace-pre-line">
+              <p className="mt-3 text-foreground/85 whitespace-pre-line">
                 {project.description}
               </p>
 
@@ -470,21 +466,21 @@ transition duration-300 rounded-xl p-4"            >
             name="nombre"
             placeholder="Tu nombre"
             required
-            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
+            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
           />
           <input
             name="email"
             type="email"
             placeholder="Tu correo"
             required
-            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
+            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
           />
           <textarea
             name="mensaje"
             rows={5}
             placeholder="Mensaje..."
             required
-            className="border border-gray-300 dark:border-purple-700/60 bg-white dark:bg-[#0f0a24] text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 p-3 rounded-lg"
+            className="border border-card-border bg-card text-foreground placeholder-foreground/40 p-3 rounded-lg"
           ></textarea>
 
           <button className="px-6 py-3 bg-blue-600 text-white rounded-full">
@@ -499,7 +495,7 @@ transition duration-300 rounded-xl p-4"            >
   <div className="max-w-6xl mx-auto relative flex items-center justify-center">
 
     {/* TEXTO CENTRADO */}
-    <p className="text-sm text-gray-400 text-center">
+    <p className="text-sm text-foreground/45 text-center">
       © {new Date().getFullYear()} {settings.footer_text}
     </p>
 
