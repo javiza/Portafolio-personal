@@ -38,7 +38,21 @@ create table if not exists site_settings (
 );
 
 -- 1.1) Migración: columnas nuevas del panel "control total del home".
--- Cada línea es segura de re-ejecutar (IF NOT EXISTS).
+-- Cada línea es segura de re-ejecutar (IF NOT EXISTS). También cubre
+-- columnas que ya estaban en el CREATE TABLE de arriba: si tu tabla se
+-- creó con una versión más vieja de este script (antes de que existieran),
+-- "create table if not exists" no las agrega retroactivamente, así que
+-- quedan reforzadas acá también.
+alter table site_settings add column if not exists show_about boolean default true;
+alter table site_settings add column if not exists show_services boolean default true;
+alter table site_settings add column if not exists show_stack boolean default true;
+alter table site_settings add column if not exists show_security boolean default true;
+alter table site_settings add column if not exists show_projects boolean default true;
+alter table site_settings add column if not exists show_news boolean default false;
+alter table site_settings add column if not exists show_banner boolean default false;
+alter table site_settings add column if not exists show_contact boolean default true;
+alter table site_settings add column if not exists section_order jsonb default '["about","services","stack","security","banner","news","projects","contact"]';
+
 alter table site_settings add column if not exists favicon_url text default '/favicon.ico';
 alter table site_settings add column if not exists browser_tab_title text default 'Jonathan Bustos | Desarrollador Full Stack & Pentester Web';
 

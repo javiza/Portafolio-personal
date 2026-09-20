@@ -43,6 +43,18 @@ export type SiteSettings = {
   // Tipografía
   font_family: "geist" | "inter" | "poppins" | "roboto";
 
+  // Color del texto del efecto terminal del hero (antes venía fijo en
+  // verde y no se podía editar desde el panel).
+  hero_terminal_text_color: string;
+
+  // Botones: antes cada botón del sitio (hero, servicios, redes,
+  // proyectos, formulario) tenía su color pegado en el código
+  // (azul, morado, negro...) y no eran editables. Ahora TODOS los
+  // botones "sólidos" del sitio comparten estos mismos valores.
+  button_bg_color: string;
+  button_text_color: string;
+  button_shape: "full" | "rounded" | "square";
+
   // Modo oscuro / efectos visuales
   default_theme: "light" | "dark";
   enable_effects: boolean; // partículas de fondo + animaciones extra
@@ -134,6 +146,13 @@ export type SiteSettings = {
   // "contact") y, para las personalizadas, "custom:<id>". Cualquier
   // sección visible que no aparezca aquí se agrega al final.
   section_order: string[];
+
+  // Alineación de cada sección dentro de la página: puede quedar
+  // centrada (por defecto, como hasta ahora), o desplazada e
+  // "imantada" hacia la izquierda o la derecha. Usa las mismas claves
+  // que section_order ("about", "custom:<id>", etc.). Una sección sin
+  // entrada acá se muestra centrada.
+  section_align: Record<string, "left" | "center" | "right">;
 };
 
 // Claves de las secciones fijas (no personalizadas) del home.
@@ -168,6 +187,12 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   text_color_dark: "#f0eaff",
 
   font_family: "geist",
+
+  hero_terminal_text_color: "#22c55e",
+
+  button_bg_color: "#2563eb",
+  button_text_color: "#ffffff",
+  button_shape: "full",
 
   default_theme: "light",
   enable_effects: true,
@@ -329,4 +354,6 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     "projects",
     "contact",
   ],
+
+  section_align: {},
 };
